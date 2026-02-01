@@ -1,4 +1,4 @@
-package kr.co.knuserver.infra.config;
+package kr.co.knuserver.global.config;
 
 import java.util.concurrent.Executor;
 import org.springframework.context.annotation.Bean;

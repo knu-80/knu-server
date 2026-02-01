@@ -1,4 +1,4 @@
-package kr.co.knuserver.infra.config;
+package kr.co.knuserver.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
