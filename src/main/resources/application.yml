@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: ${SPRING_PORT}
   servlet:
     session:
       timeout: 1800
@@ -14,6 +14,7 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 20
       minimum-idle: 10
@@ -54,7 +55,7 @@ management:
         include: "*"
 
 logging:
-  config: classpath:logback/logback-${spring.profiles.active:test}.xml
+  config: classpath:logback/logback-${spring.profiles.active:local}.xml
   file:
     name: ${LOG_FILE_PATH:./logs/app.log}
 

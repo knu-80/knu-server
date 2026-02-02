@@ -1,34 +1,27 @@
 services:
   database:
     image: mysql:8.4.0
-    container_name: bread-feet-database
+    container_name: knu-80-database
     environment:
-      MYSQL_ROOT_PASSWORD: abcd1234
-      MYSQL_DATABASE: sa
-      MYSQL_USER: sa
-      MYSQL_PASSWORD: abcd1234
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     command:
-      --port=3306
-      --max_allowed_packet=32M
+      --port=${DB_PORT} --max_allowed_packet=32M
     expose:
-      - "3306"
+      - ${DB_PORT}
     ports:
-      - "3306:3306"
-    restart: "always"
+      - ${DB_PORT}:${DB_PORT}
+    restart: always
     volumes:
-      - bread-feet-database:/var/lib/mysql
+      - knu-80-database:/var/lib/mysql
     networks:
-      - bread-feet-bridge
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pabcd1234"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      - knu-80-bridge
 
 volumes:
-  bread-feet-database:
+  knu-80-database:
 
 networks:
-  bread-feet-bridge:
+  knu-80-bridge:
     driver: bridge
