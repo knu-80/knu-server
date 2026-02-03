@@ -61,8 +61,8 @@ public class RecruitmentBooth extends BaseTimeEntity {
     private LocalDateTime updatedAt;
 
     // Member 도메인 추가 시에, parameter 수정 예정
-    @Builder
-    public RecruitmentBooth(Integer boothNumber, String name,
+    @Builder(access = AccessLevel.PRIVATE)
+    private RecruitmentBooth(Integer boothNumber, String name,
         RecruitmentBoothDivision division, String description,
         String applyLink, Boolean isActive, String imageUrl) {
 
@@ -75,5 +75,24 @@ public class RecruitmentBooth extends BaseTimeEntity {
         this.imageUrl = imageUrl;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public static RecruitmentBooth create(Integer boothNumber, String name,
+        RecruitmentBoothDivision division, String description,
+        String applyLink, Boolean isActive, String imageUrl){
+
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("부스 이름은 필수입니다.");
+        }
+
+        return RecruitmentBooth.builder()
+            .boothNumber(boothNumber)
+            .name(name)
+            .division(division)
+            .description(description)
+            .applyLink(applyLink)
+            .isActive(true)
+            .imageUrl(imageUrl)
+            .build();
     }
 }
