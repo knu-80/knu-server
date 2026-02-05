@@ -1,4 +1,4 @@
-package kr.co.knuserver.domain.pubMenu;
+package kr.co.knuserver.domain.pubMenu.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,16 +9,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import kr.co.knuserver.domain.pubBooth.PubBooth;
+import kr.co.knuserver.domain.pubBooth.entity.PubBooth;
 import kr.co.knuserver.global.base.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import lombok.AllArgsConstructor;
+
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "pub_menu")
 public class PubMenu extends BaseTimeEntity {
 
@@ -35,11 +39,12 @@ public class PubMenu extends BaseTimeEntity {
     @JoinColumn(name = "pub_booth_id")
     private PubBooth pubBooth;
 
-    @Builder
-    public PubMenu(String name, int price, String imageUrl, PubBooth pubBooth) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.pubBooth = pubBooth;
+    public static PubMenu of(String name, int price, String imageUrl, PubBooth pubBooth) {
+        return PubMenu.builder()
+                .name(name)
+                .price(price)
+                .imageUrl(imageUrl)
+                .pubBooth(pubBooth)
+                .build();
     }
 }

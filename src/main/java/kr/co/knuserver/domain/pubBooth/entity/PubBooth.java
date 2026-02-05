@@ -1,4 +1,4 @@
-package kr.co.knuserver.domain.pubBooth;
+package kr.co.knuserver.domain.pubBooth.entity;
 
 import jakarta.persistence.*;
 import kr.co.knuserver.global.base.BaseTimeEntity;
@@ -7,9 +7,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import lombok.AllArgsConstructor;
+
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "pub_booth")
 public class PubBooth extends BaseTimeEntity {
 
@@ -24,12 +28,13 @@ public class PubBooth extends BaseTimeEntity {
     private String accountNum;
     private Long memberId;
 
-    @Builder
-    public PubBooth(String boothName, String clubName, String description, String accountNum, Long memberId) {
-        this.boothName = boothName;
-        this.clubName = clubName;
-        this.description = description;
-        this.accountNum = accountNum;
-        this.memberId = memberId;
+    public static PubBooth createPubBooth(String boothName, String clubName, String description, String accountNum, Long memberId) {
+        return PubBooth.builder()
+                .boothName(boothName)
+                .clubName(clubName)
+                .description(description)
+                .accountNum(accountNum)
+                .memberId(memberId)
+                .build();
     }
 }
