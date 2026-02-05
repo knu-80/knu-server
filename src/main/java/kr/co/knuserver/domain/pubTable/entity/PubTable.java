@@ -8,13 +8,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import kr.co.knuserver.global.base.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "pub_table")
 public class PubTable extends BaseTimeEntity {
     @Id
@@ -30,10 +33,8 @@ public class PubTable extends BaseTimeEntity {
     // @JoinColumn(name = "pub_booth_id")
     // private PubBooth pubBooth;
 
-    @Builder
-    public PubTable(int tableNum) {
-        this.tableNum = tableNum;
+    public static PubTable createPubTable(int tableNum) {
         // TODO PubBooth 연결하기
-        // this.pubBooth = pubBooth;
+        return PubTable.builder().tableNum(tableNum).build();
     }
 }

@@ -13,13 +13,16 @@ import java.time.LocalDateTime;
 import kr.co.knuserver.domain.pubTable.entity.PubTable;
 import kr.co.knuserver.global.base.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "pub_table_session")
 public class PubTableSession extends BaseTimeEntity {
     @Id
@@ -39,11 +42,13 @@ public class PubTableSession extends BaseTimeEntity {
     @JoinColumn(name = "pub_table_id")
     private PubTable pubTable;
 
-    @Builder
-    public PubTableSession(int guestCount,  PubTable pubTable) {
-        this.entryTime = LocalDateTime.now();
-        this.guestCount = guestCount;
-        this.pubTable = pubTable;
+    public static PubTableSession createPubTableSession(int guestCount, PubTable pubTable) {
+        return PubTableSession.builder()
+                .guestCount(guestCount)
+                .entryTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .pubTable(pubTable)
+                .build();
     }
 
     public void guestExit() {
