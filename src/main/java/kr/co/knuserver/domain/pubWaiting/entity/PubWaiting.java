@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import kr.co.knuserver.global.base.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,9 @@ import org.hibernate.annotations.SoftDelete;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "pub_waiting")
 @SoftDelete
 public class PubWaiting extends BaseTimeEntity {
@@ -45,13 +48,11 @@ public class PubWaiting extends BaseTimeEntity {
     // @JoinColumn(name = "pub_booth_id")
     // private PubBooth pubBooth;
 
-    @Builder
-    public PubWaiting(String phone, int guestCount) {
-        this.phone = phone;
-        this.guestCount = guestCount;
-        this.status = PubWaitingStatus.WAITING;
+    public static PubWaiting createPubWaiting(String phone, int guestCount) {
         // TODO Member, PubBooth 엔티티 연결
-        // this.member = member;
-        // this.pubBooth = pubBooth;
+        return PubWaiting.builder()
+                .phone(phone)
+                .guestCount(guestCount)
+                .build();
     }
 }
