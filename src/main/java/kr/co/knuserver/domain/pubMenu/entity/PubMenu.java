@@ -35,7 +35,7 @@ public class PubMenu extends BaseTimeEntity {
     private int price;
     private String imageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pub_booth_id")
     private PubBooth pubBooth;
 
