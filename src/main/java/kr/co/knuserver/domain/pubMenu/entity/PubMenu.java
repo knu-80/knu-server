@@ -39,7 +39,7 @@ public class PubMenu extends BaseTimeEntity {
     @JoinColumn(name = "pub_booth_id")
     private PubBooth pubBooth;
 
-    public static PubMenu of(String name, int price, String imageUrl, PubBooth pubBooth) {
+    public static PubMenu crreatePubMenu(String name, int price, String imageUrl, PubBooth pubBooth) {
         return PubMenu.builder()
                 .name(name)
                 .price(price)
