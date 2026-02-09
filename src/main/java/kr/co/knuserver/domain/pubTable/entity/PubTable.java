@@ -28,13 +28,13 @@ public class PubTable extends BaseTimeEntity {
     @Column(nullable = false)
     private int tableNum;
 
-    // TODO PubBooth 연결하기
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "pub_booth_id")
-    // private PubBooth pubBooth;
+    @Column(name = "pub_booth_id", nullable = false)
+    private Long pubBoothId;
 
-    public static PubTable createPubTable(int tableNum) {
-        // TODO PubBooth 연결하기
-        return PubTable.builder().tableNum(tableNum).build();
+    public static PubTable createPubTable(int tableNum, Long pubBoothId) {
+        return PubTable.builder()
+                .tableNum(tableNum)
+                .pubBoothId(pubBoothId)
+                .build();
     }
 }

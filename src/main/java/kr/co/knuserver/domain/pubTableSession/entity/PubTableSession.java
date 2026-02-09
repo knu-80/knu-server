@@ -38,16 +38,15 @@ public class PubTableSession extends BaseTimeEntity {
     @Column(nullable = false)
     private int guestCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pub_table_id")
-    private PubTable pubTable;
+    @Column(name = "pub_table_id", nullable = false)
+    private Long pubTableId;
 
-    public static PubTableSession createPubTableSession(int guestCount, PubTable pubTable) {
+    public static PubTableSession createPubTableSession(int guestCount, Long pubTableId) {
         return PubTableSession.builder()
                 .guestCount(guestCount)
                 .entryTime(LocalDateTime.now())
                 .exitTime(LocalDateTime.now())
-                .pubTable(pubTable)
+                .pubTableId(pubTableId)
                 .build();
     }
 
