@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
 
 @Entity
 @Getter
@@ -22,10 +23,11 @@ import org.hibernate.annotations.SoftDelete;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "pub_waiting")
-@SoftDelete
+@SoftDelete(columnName = "deleted_at", strategy = SoftDeleteType.TIMESTAMP)
 public class PubWaiting extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pub_waiting_id")
     private Long id;
 
     @Column(nullable = false)
@@ -38,21 +40,18 @@ public class PubWaiting extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PubWaitingStatus status;
 
-    // TODO Member 엔티티 연결
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "member_id")
-    // private Member member;
+    @Column(name = "member_id", nullable = false)
+    private Long memberId;
 
-    // TODO PubBooth 엔티티 연결
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "pub_booth_id")
-    // private PubBooth pubBooth;
+    @Column(name = "pub_booth_id", nullable = false)
+    private Long pubBoothId;
 
-    public static PubWaiting createPubWaiting(String phone, int guestCount) {
-        // TODO Member, PubBooth 엔티티 연결
+    public static PubWaiting createPubWaiting(String phone, int guestCount, Long memberId, Long pubBoothId) {
         return PubWaiting.builder()
                 .phone(phone)
                 .guestCount(guestCount)
+                .memberId(memberId)
+                .pubBoothId(pubBoothId)
                 .build();
     }
 }
