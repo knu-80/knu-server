@@ -1,14 +1,21 @@
 package kr.co.knuserver.domain.Event.entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import kr.co.knuserver.global.base.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -45,24 +52,11 @@ public class Event extends BaseTimeEntity {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-
-    @Builder(access = AccessLevel.PRIVATE)
-    private Event(String title, String description, EventType type,
+    public static Event createEvent(String title, String description, EventType type,
         String imageUrl, LocalDateTime startAt, LocalDateTime endAt, Boolean isActive) {
-        this.title = title;
-        this.description = description;
-        this.type = type;
-        this.imageUrl = imageUrl;
-        this.startAt = startAt;
-        this.endAt = endAt;
-        this.isActive = isActive;
-    }
-
-    public static Event create(String title, String description, EventType type,
-        String imageUrl, LocalDateTime startAt, LocalDateTime endAt, Boolean isActive){
 
         if (startAt.isAfter(endAt)) {
-            throw new IllegalArgumentException("행사 종료 시간은 시작 시간보다 빨라야 합니다.");
+            throw new IllegalArgumentException("행사 종료 시각은 시작 시각보다 빨라야 합니다.");
         }
 
         return Event.builder()
