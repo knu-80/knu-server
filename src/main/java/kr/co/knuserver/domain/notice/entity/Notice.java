@@ -3,6 +3,8 @@ package kr.co.knuserver.domain.notice.entity;
 import jakarta.persistence.*;
 import kr.co.knuserver.global.base.BaseTimeEntity;
 import lombok.*;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
 
 @Entity
 @Getter
@@ -10,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "notice")
+@SoftDelete(columnName = "deleted_at", strategy = SoftDeleteType.TIMESTAMP)
 public class Notice extends BaseTimeEntity {
 
     @Id
@@ -29,18 +32,15 @@ public class Notice extends BaseTimeEntity {
     @Column(nullable = false)
     private NoticeType type;
 
-//  TODO: Member 도메인 정의되면 추가할 예정
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @Column(name = "member_id")
+    private Long memberId;
 
-
-//  TODO: Member 도메인 정의되면 파라미터 추가할 예정
-    public static Notice createNotice(String title, String content, NoticeType type) {
+    public static Notice createNotice(String title, String content, NoticeType type, Long memberId) {
         return Notice.builder()
                 .title(title)
                 .content(content)
                 .type(type)
+                .memberId(memberId)
                 .build();
     }
 }
