@@ -35,16 +35,15 @@ public class PubMenu extends BaseTimeEntity {
     private int price;
     private String imageUrl;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "pub_booth_id")
-    private PubBooth pubBooth;
+    @Column(name = "pub_booth_id")
+    private Long pubBoothId;
 
-    public static PubMenu crreatePubMenu(String name, int price, String imageUrl, PubBooth pubBooth) {
+    public static PubMenu createPubMenu(String name, int price, String imageUrl, Long pubBoothId) {
         return PubMenu.builder()
                 .name(name)
                 .price(price)
                 .imageUrl(imageUrl)
-                .pubBooth(pubBooth)
+                .pubBoothId(pubBoothId)
                 .build();
     }
 }
