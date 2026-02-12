@@ -30,12 +30,17 @@ public enum BusinessErrorCode implements ErrorCode {
      * 401 UNAUTHORIZED: 인증되지 않은 사용자
      */
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "C004", "인증되지 않은 사용자입니다."),
+    INVALID_PIN(HttpStatus.UNAUTHORIZED, "C402", "잘못된 PIN입니다."),
 
     /*
      * 403 FORBIDDEN: 권한이 없는 사용자
      */
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "C005", "접근 권한이 없습니다."),
 
+    /*
+     * 404 NOT_FOUND
+     */
+    ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "C401", "관리자 계정을 찾을 수 없습니다."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
