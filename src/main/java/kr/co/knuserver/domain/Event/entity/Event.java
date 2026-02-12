@@ -2,6 +2,7 @@ package kr.co.knuserver.domain.Event.entity;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -43,30 +44,29 @@ public class Event extends BaseTimeEntity {
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
-    @Column(name = "start_at", nullable = false)
-    private LocalDateTime startAt;
-
-    @Column(name = "end_at", nullable = false)
-    private LocalDateTime endAt;
+    @Embedded
+    private DurationVO eventDuration;
 
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive;
+    private boolean isActive;
 
     public static Event createEvent(String title, String description, EventType type,
-        String imageUrl, LocalDateTime startAt, LocalDateTime endAt, Boolean isActive) {
+        String imageUrl, LocalDateTime startAt, LocalDateTime endAt) {
 
-        if (startAt.isAfter(endAt)) {
-            throw new IllegalArgumentException("행사 종료 시각은 시작 시각보다 빨라야 합니다.");
-        }
+        DurationVO eventDuration = DurationVO.createDurationVO(startAt, endAt);
 
         return Event.builder()
             .title(title)
             .description(description)
             .type(type)
             .imageUrl(imageUrl)
-            .startAt(startAt)
-            .endAt(endAt)
+            .eventDuration(eventDuration)
             .isActive(true)
             .build();
+    }
+
+    public Event changeActiveStatus(boolean isActive) {
+        this.isActive = isActive;
+        return this;
     }
 }
