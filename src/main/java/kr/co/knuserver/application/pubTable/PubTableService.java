@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@org.springframework.transaction.annotation.Transactional
+@Transactional(readOnly = true)
 public class PubTableService {
 
     private final PubTableRepository pubTableRepository;
