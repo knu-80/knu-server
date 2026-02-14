@@ -24,6 +24,7 @@ public class PubTableSessionService {
     private final PubTableRepository pubTableRepository;
     private final PubWaitingRepository pubWaitingRepository;
 
+    @Transactional
     public void startSession(PubTableSessionStartRequest request) {
         PubTable pubTable = pubTableRepository.findById(request.pubTableId()).orElseThrow(
                 () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
@@ -43,6 +44,7 @@ public class PubTableSessionService {
         pubWaiting.entered();
     }
 
+    @Transactional
     public void endSession(PubTableSessionEndRequest request) {
         PubTableSession pubTableSession = pubTableSessionRepository.findById(request.pubTableSessionId()).orElseThrow(
                 ()  -> new BusinessException(BusinessErrorCode.PUB_TABLE_SESSION_NOT_FOUND)
