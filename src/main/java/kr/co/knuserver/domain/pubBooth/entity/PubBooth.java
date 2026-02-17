@@ -30,6 +30,14 @@ public class PubBooth extends BaseTimeEntity {
     private String accountNum;
     private Long memberId;
 
+    public void update(String boothName, String clubName, String description, String accountNum, Long memberId) {
+        this.boothName = boothName;
+        this.clubName = clubName;
+        this.description = description;
+        this.accountNum = accountNum;
+        this.memberId = memberId;
+    }
+
     public static PubBooth createPubBooth(String boothName, String clubName, String description, String accountNum, Long memberId) {
         return PubBooth.builder()
                 .boothName(boothName)

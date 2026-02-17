@@ -6,7 +6,9 @@ import kr.co.knuserver.domain.pubMenu.entity.PubMenu;
 import kr.co.knuserver.domain.pubMenu.repository.PubMenuRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
+import kr.co.knuserver.presentation.pubBooth.dto.PubBoothCreateRequestDto;
 import kr.co.knuserver.presentation.pubBooth.dto.PubBoothDetailResponseDto;
+import kr.co.knuserver.presentation.pubBooth.dto.PubBoothUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,5 +36,38 @@ public class PubBoothService {
     public PubBooth findPubBoothById(Long id) {
         return pubBoothRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.PUB_BOOTH_NOT_FOUND));
+    }
+
+    @Transactional
+    public Long create(PubBoothCreateRequestDto requestDto) {
+        PubBooth pubBooth = PubBooth.createPubBooth(
+                requestDto.getBoothName(),
+                requestDto.getClubName(),
+                requestDto.getDescription(),
+                requestDto.getAccountNum(),
+                requestDto.getMemberId()
+        );
+        PubBooth savedPubBooth = pubBoothRepository.save(pubBooth);
+        return savedPubBooth.getId();
+    }
+
+    @Transactional
+    public void update(Long id, PubBoothUpdateRequestDto requestDto) {
+        PubBooth pubBooth = findPubBoothById(id);
+        pubBooth.update(
+                requestDto.getBoothName(),
+                requestDto.getClubName(),
+                requestDto.getDescription(),
+                requestDto.getAccountNum(),
+                requestDto.getMemberId()
+        );
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        PubBooth pubBooth = findPubBoothById(id);
+        List<PubMenu> pubMenus = pubMenuRepository.findByPubBoothId(id);
+        pubMenuRepository.deleteAll(pubMenus);
+        pubBoothRepository.delete(pubBooth);
     }
 }
