@@ -25,6 +25,7 @@ public enum BusinessErrorCode implements ErrorCode {
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "잘못된 입력값입니다."),
     INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C002", "잘못된 타입이 입력되었습니다."),
     MISSING_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C003", "필수 입력값이 누락되었습니다."),
+    NOT_IN_WAITING_PROCESS(HttpStatus.BAD_REQUEST, "C2003", "웨이팅 등록 혹은 입장 호출 상태가 아닙니다."),
 
     /*
      * 401 UNAUTHORIZED: 인증되지 않은 사용자
@@ -36,6 +37,12 @@ public enum BusinessErrorCode implements ErrorCode {
      */
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "C005", "접근 권한이 없습니다."),
 
+    /*
+     * 404 NOT_FOUND: 존재하지 않는 리소스
+     */
+    PUB_TABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "C2001", "존재하지 않는 테이블입니다."),
+    PUB_WAITING_NOT_FOUND(HttpStatus.NOT_FOUND, "C2002", "존재하지 않는 웨이팅입니다."),
+    PUB_TABLE_SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "C2002", "존재하지 않는 세션입니다."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
