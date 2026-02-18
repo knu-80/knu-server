@@ -9,8 +9,8 @@ import kr.co.knuserver.domain.pubWaiting.entity.PubWaitingStatus;
 import kr.co.knuserver.domain.pubWaiting.repository.PubWaitingRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
-import kr.co.knuserver.presentation.pubTableSession.dto.PubTableSessionEndRequest;
-import kr.co.knuserver.presentation.pubTableSession.dto.PubTableSessionStartRequest;
+import kr.co.knuserver.presentation.pubTableSession.dto.PubTableSessionEndRequestDto;
+import kr.co.knuserver.presentation.pubTableSession.dto.PubTableSessionStartRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class PubTableSessionService {
     private final PubWaitingRepository pubWaitingRepository;
 
     @Transactional
-    public void startSession(PubTableSessionStartRequest request) {
+    public void startSession(PubTableSessionStartRequestDto request) {
         PubTable pubTable = pubTableRepository.findById(request.pubTableId()).orElseThrow(
                 () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
         );
@@ -45,7 +45,7 @@ public class PubTableSessionService {
     }
 
     @Transactional
-    public void endSession(PubTableSessionEndRequest request) {
+    public void endSession(PubTableSessionEndRequestDto request) {
         PubTableSession pubTableSession = pubTableSessionRepository.findById(request.pubTableSessionId()).orElseThrow(
                 ()  -> new BusinessException(BusinessErrorCode.PUB_TABLE_SESSION_NOT_FOUND)
         );

@@ -2,7 +2,7 @@ package kr.co.knuserver.presentation.pubTableSession.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-public record PubTableSessionEndRequest(
+public record PubTableSessionEndRequestDto(
         @NotNull Long pubTableSessionId
 ) {
 }
