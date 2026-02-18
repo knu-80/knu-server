@@ -1,4 +1,4 @@
-package kr.co.knuserver.domain.RecruitmentBooth.entity;
+package kr.co.knuserver.domain.booth.entity;
 
 
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum RecruitmentBoothDivision {
+public enum BoothDivision {
     ACADEMIC_DIVISION("학술분과"),
     CULTURE_ART_DIVISION("문예분과"),
     SPORTS_DIVISION("체육분과"),
