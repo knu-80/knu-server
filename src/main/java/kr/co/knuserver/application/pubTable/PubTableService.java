@@ -7,8 +7,8 @@ import kr.co.knuserver.domain.pubTable.repository.PubTableRepository;
 import kr.co.knuserver.domain.pubTableSession.entity.PubTableSession;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
-import kr.co.knuserver.presentation.pubTable.dto.PubTableRequest;
-import kr.co.knuserver.presentation.pubTable.dto.PubTableResponse;
+import kr.co.knuserver.presentation.pubTable.dto.PubTableRequestDto;
+import kr.co.knuserver.presentation.pubTable.dto.PubTableResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,30 +41,30 @@ public class PubTableService {
     }
 
     @Transactional
-    public PubTableResponse createPubTable(PubTableRequest request) {
+    public PubTableResponseDto createPubTable(PubTableRequestDto request) {
         validateDuplicateTable(request.tableNum(), request.pubBoothId());
 
         PubTable pubTable = request.toEntity();
         pubTableRepository.save(pubTable);
-        return PubTableResponse.fromEntity(pubTable);
+        return PubTableResponseDto.fromEntity(pubTable);
     }
 
-    public List<PubTableResponse> getAllPubTables(Long pubBoothId) {
+    public List<PubTableResponseDto> getAllPubTables(Long pubBoothId) {
         List<PubTable> pubTables = getAllPubTablesByBoothId(pubBoothId);
         return pubTables.stream().map((pubTable) -> {
                     PubTableSession pubTableSession = pubTableSessionService.getCurrentPubTableSession(pubTable.getId());
-                    return PubTableResponse.fromEntity(pubTable, pubTableSession);
+                    return PubTableResponseDto.fromEntity(pubTable, pubTableSession);
                 }
                 ).toList();
     }
 
     @Transactional
-    public PubTableResponse updatePubTable(PubTableRequest request, Long pubTableId) {
+    public PubTableResponseDto updatePubTable(PubTableRequestDto request, Long pubTableId) {
         validateDuplicateTable(request.tableNum(), request.pubBoothId());
 
         PubTable pubTable = getPubTableById(pubTableId);
         pubTable.updatePubTable(request);
-        return PubTableResponse.fromEntity(pubTable);
+        return PubTableResponseDto.fromEntity(pubTable);
     }
 
     @Transactional
