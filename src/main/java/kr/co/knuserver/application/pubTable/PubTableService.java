@@ -21,20 +21,36 @@ public class PubTableService {
     private final PubTableRepository pubTableRepository;
     private final PubTableSessionService pubTableSessionService;
 
-    @Transactional
-    public PubTableResponse createPubTable(PubTableRequest request) {
-        // TODO PubBooth가 존재하는지 확인 및 관리자인지 확인
-        if (pubTableRepository.existsByTableNumAndPubBoothId(request.tableNum(), request.pubBoothId())) {
+    public void validateDuplicateTable(int tableNum, Long pubBoothId) {
+        // TODO 해당 부스의 소유자인지 체크
+        if (pubTableRepository.existsByTableNumAndPubBoothId(tableNum, pubBoothId)) {
             throw new BusinessException(BusinessErrorCode.ALREADY_EXISTS);
         }
+    }
+
+    public PubTable getPubTableById(Long pubTableId) {
+        // TODO 해당 부스의 소유자인지 체크
+        return pubTableRepository.findById(pubTableId).orElseThrow(
+                () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
+        );
+    }
+
+    public List<PubTable> getAllPubTablesByBoothId(Long pubBoothId) {
+        // TODO 해당 부스의 소유자인지 체크
+        return pubTableRepository.findAllByPubBoothId(pubBoothId);
+    }
+
+    @Transactional
+    public PubTableResponse createPubTable(PubTableRequest request) {
+        validateDuplicateTable(request.tableNum(), request.pubBoothId());
+
         PubTable pubTable = request.toEntity();
         pubTableRepository.save(pubTable);
         return PubTableResponse.fromEntity(pubTable);
     }
 
     public List<PubTableResponse> getAllPubTables(Long pubBoothId) {
-        // TODO PubBooth가 존재하는지 확인 및 관리자인지 확인
-        List<PubTable> pubTables = pubTableRepository.findAllByPubBoothId(pubBoothId);
+        List<PubTable> pubTables = getAllPubTablesByBoothId(pubBoothId);
         return pubTables.stream().map((pubTable) -> {
                     PubTableSession pubTableSession = pubTableSessionService.getCurrentPubTableSession(pubTable.getId());
                     return PubTableResponse.fromEntity(pubTable, pubTableSession);
@@ -44,20 +60,16 @@ public class PubTableService {
 
     @Transactional
     public PubTableResponse updatePubTable(PubTableRequest request, Long pubTableId) {
-        PubTable pubTable = pubTableRepository.findById(pubTableId).orElseThrow(
-                () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
-        );
-        // TODO PubBooth의 관리자인지 확인
+        validateDuplicateTable(request.tableNum(), request.pubBoothId());
+
+        PubTable pubTable = getPubTableById(pubTableId);
         pubTable.updatePubTable(request);
         return PubTableResponse.fromEntity(pubTable);
     }
 
     @Transactional
     public void deletePubTable(Long pubTableId) {
-        PubTable pubTable = pubTableRepository.findById(pubTableId).orElseThrow(
-                () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
-        );
-        // TODO PubBooth의 관리자인지 확인
+        PubTable pubTable = getPubTableById(pubTableId);
         pubTableRepository.delete(pubTable);
     }
 }
