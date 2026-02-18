@@ -8,15 +8,15 @@ import lombok.Builder;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record PubTableResponse(
+public record PubTableResponseDto(
         @NotNull Long pubTableId,
         @NotNull int tableNum,
         @NotNull Long pubBoothId,
         @NotNull String status,
         CurrentPubTableSession currentPubTableSession
 ) {
-    public static PubTableResponse fromEntity(PubTable pubTable) {
-        return PubTableResponse.builder()
+    public static PubTableResponseDto fromEntity(PubTable pubTable) {
+        return PubTableResponseDto.builder()
                 .pubTableId(pubTable.getId())
                 .tableNum(pubTable.getTableNum())
                 .pubBoothId(pubTable.getPubBoothId())
@@ -24,12 +24,12 @@ public record PubTableResponse(
                 .build();
     }
 
-    public static PubTableResponse fromEntity(PubTable pubTable, PubTableSession pubTableSession) {
+    public static PubTableResponseDto fromEntity(PubTable pubTable, PubTableSession pubTableSession) {
         if (pubTableSession == null) {
-            return PubTableResponse.fromEntity(pubTable);
+            return PubTableResponseDto.fromEntity(pubTable);
         }
         CurrentPubTableSession currentPubTableSession = CurrentPubTableSession.fromEntity(pubTableSession);
-        return PubTableResponse.builder()
+        return PubTableResponseDto.builder()
                 .pubTableId(pubTable.getId())
                 .tableNum(pubTable.getTableNum())
                 .pubBoothId(pubTable.getPubBoothId())

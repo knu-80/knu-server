@@ -3,7 +3,7 @@ package kr.co.knuserver.presentation.pubTable.dto;
 import jakarta.validation.constraints.NotNull;
 import kr.co.knuserver.domain.pubTable.entity.PubTable;
 
-public record PubTableRequest(
+public record PubTableRequestDto(
     @NotNull int tableNum,
     @NotNull Long pubBoothId
 ) {

@@ -7,8 +7,8 @@ import kr.co.knuserver.domain.pubTable.repository.PubTableRepository;
 import kr.co.knuserver.domain.pubTableSession.entity.PubTableSession;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
-import kr.co.knuserver.presentation.pubTable.dto.PubTableRequest;
-import kr.co.knuserver.presentation.pubTable.dto.PubTableResponse;
+import kr.co.knuserver.presentation.pubTable.dto.PubTableRequestDto;
+import kr.co.knuserver.presentation.pubTable.dto.PubTableResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,43 +21,55 @@ public class PubTableService {
     private final PubTableRepository pubTableRepository;
     private final PubTableSessionService pubTableSessionService;
 
-    @Transactional
-    public PubTableResponse createPubTable(PubTableRequest request) {
-        // TODO PubBooth가 존재하는지 확인 및 관리자인지 확인
-        if (pubTableRepository.existsByTableNumAndPubBoothId(request.tableNum(), request.pubBoothId())) {
+    public void validateDuplicateTable(int tableNum, Long pubBoothId) {
+        // TODO 해당 부스의 소유자인지 체크
+        if (pubTableRepository.existsByTableNumAndPubBoothId(tableNum, pubBoothId)) {
             throw new BusinessException(BusinessErrorCode.ALREADY_EXISTS);
         }
-        PubTable pubTable = request.toEntity();
-        pubTableRepository.save(pubTable);
-        return PubTableResponse.fromEntity(pubTable);
     }
 
-    public List<PubTableResponse> getAllPubTables(Long pubBoothId) {
-        // TODO PubBooth가 존재하는지 확인 및 관리자인지 확인
-        List<PubTable> pubTables = pubTableRepository.findAllByPubBoothId(pubBoothId);
+    public PubTable getPubTableById(Long pubTableId) {
+        // TODO 해당 부스의 소유자인지 체크
+        return pubTableRepository.findById(pubTableId).orElseThrow(
+                () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
+        );
+    }
+
+    public List<PubTable> getAllPubTablesByBoothId(Long pubBoothId) {
+        // TODO 해당 부스의 소유자인지 체크
+        return pubTableRepository.findAllByPubBoothId(pubBoothId);
+    }
+
+    @Transactional
+    public PubTableResponseDto createPubTable(PubTableRequestDto request) {
+        validateDuplicateTable(request.tableNum(), request.pubBoothId());
+
+        PubTable pubTable = request.toEntity();
+        pubTableRepository.save(pubTable);
+        return PubTableResponseDto.fromEntity(pubTable);
+    }
+
+    public List<PubTableResponseDto> getAllPubTables(Long pubBoothId) {
+        List<PubTable> pubTables = getAllPubTablesByBoothId(pubBoothId);
         return pubTables.stream().map((pubTable) -> {
                     PubTableSession pubTableSession = pubTableSessionService.getCurrentPubTableSession(pubTable.getId());
-                    return PubTableResponse.fromEntity(pubTable, pubTableSession);
+                    return PubTableResponseDto.fromEntity(pubTable, pubTableSession);
                 }
                 ).toList();
     }
 
     @Transactional
-    public PubTableResponse updatePubTable(PubTableRequest request, Long pubTableId) {
-        PubTable pubTable = pubTableRepository.findById(pubTableId).orElseThrow(
-                () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
-        );
-        // TODO PubBooth의 관리자인지 확인
+    public PubTableResponseDto updatePubTable(PubTableRequestDto request, Long pubTableId) {
+        validateDuplicateTable(request.tableNum(), request.pubBoothId());
+
+        PubTable pubTable = getPubTableById(pubTableId);
         pubTable.updatePubTable(request);
-        return PubTableResponse.fromEntity(pubTable);
+        return PubTableResponseDto.fromEntity(pubTable);
     }
 
     @Transactional
     public void deletePubTable(Long pubTableId) {
-        PubTable pubTable = pubTableRepository.findById(pubTableId).orElseThrow(
-                () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
-        );
-        // TODO PubBooth의 관리자인지 확인
+        PubTable pubTable = getPubTableById(pubTableId);
         pubTableRepository.delete(pubTable);
     }
 }
