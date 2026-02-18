@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import kr.co.knuserver.global.base.BaseTimeEntity;
-import kr.co.knuserver.presentation.pubTable.dto.PubTableRequestDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,10 +36,5 @@ public class PubTable extends BaseTimeEntity {
                 .tableNum(tableNum)
                 .pubBoothId(pubBoothId)
                 .build();
-    }
-
-    public void updatePubTable(PubTableRequestDto request) {
-        this.tableNum = request.tableNum();
-        this.pubBoothId = request.pubBoothId();
     }
 }
