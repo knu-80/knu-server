@@ -54,8 +54,4 @@ public class PubWaiting extends BaseTimeEntity {
                 .pubBoothId(pubBoothId)
                 .build();
     }
-
-    public void entered() {
-        this.status = PubWaitingStatus.ENTERED;
-    }
 }

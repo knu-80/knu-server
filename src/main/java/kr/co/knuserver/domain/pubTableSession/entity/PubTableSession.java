@@ -45,6 +45,7 @@ public class PubTableSession extends BaseTimeEntity {
         return PubTableSession.builder()
                 .guestCount(guestCount)
                 .entryTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
                 .pubTableId(pubTableId)
                 .build();
     }
