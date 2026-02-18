@@ -1,4 +1,4 @@
-package kr.co.knuserver.domain.Event.entity;
+package kr.co.knuserver.domain.event.entity;
 
 
 import jakarta.persistence.Column;
