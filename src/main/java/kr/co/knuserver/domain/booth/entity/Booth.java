@@ -76,4 +76,31 @@ public class Booth extends BaseTimeEntity {
             .imageUrl(imageUrl)
             .build();
     }
+
+    public void updateFromDto(BoothUpdateRequestDto request) {
+        if (request.memberId() != null) {
+            this.memberId = request.memberId();
+        }
+        if (request.boothNumber() != null) {
+            this.boothNumber = request.boothNumber();
+        }
+        if (request.name() != null) {
+            this.name = request.name();
+        }
+        if (request.division() != null) {
+            this.division = request.division();
+        }
+        if (request.description() != null) {
+            this.description = request.description();
+        }
+        if (request.applyLink() != null) {
+            this.applyLink = request.applyLink();
+        }
+        if (request.imageUrl() != null) {
+            this.imageUrl = request.imageUrl();
+        }
+        if (request.isActive() != null) {
+            this.isActive = request.isActive();
+        }
+    }
 }
