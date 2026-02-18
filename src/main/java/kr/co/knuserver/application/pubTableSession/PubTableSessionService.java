@@ -1,5 +1,7 @@
 package kr.co.knuserver.application.pubTableSession;
 
+import kr.co.knuserver.application.pubTable.PubTableService;
+import kr.co.knuserver.application.pubWaiting.PubWaitingService;
 import kr.co.knuserver.domain.pubTable.entity.PubTable;
 import kr.co.knuserver.domain.pubTable.repository.PubTableRepository;
 import kr.co.knuserver.domain.pubTableSession.entity.PubTableSession;
@@ -21,20 +23,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class PubTableSessionService {
 
     private final PubTableSessionRepository pubTableSessionRepository;
-    private final PubTableRepository pubTableRepository;
-    private final PubWaitingRepository pubWaitingRepository;
+    private final PubTableService pubTableService;
+    private final PubWaitingService pubWaitingService;
+
+    public PubTableSession getPubTableSessionById(Long pubTableSessionId) {
+        // TODO 해당 부스의 소유자인지 체크
+        return pubTableSessionRepository.findById(pubTableSessionId).orElseThrow(
+                ()  -> new BusinessException(BusinessErrorCode.PUB_TABLE_SESSION_NOT_FOUND)
+        );
+    }
+
+    public PubTableSession getCurrentPubTableSession(Long pubTableId) {
+        return pubTableSessionRepository.findByPubTableIdAndExitTimeIsNull(pubTableId);
+    }
 
     @Transactional
     public void startSession(PubTableSessionStartRequestDto request) {
-        PubTable pubTable = pubTableRepository.findById(request.pubTableId()).orElseThrow(
-                () -> new BusinessException(BusinessErrorCode.PUB_TABLE_NOT_FOUND)
-        );
-        PubWaiting pubWaiting = pubWaitingRepository.findById(request.pubWaitingId()).orElseThrow(
-                () -> new BusinessException(BusinessErrorCode.PUB_WAITING_NOT_FOUND)
-        );
+        PubTable pubTable = pubTableService.getPubTableById(request.pubTableId());
+        PubWaiting pubWaiting = pubWaitingService.getPubWaitingById(request.pubWaitingId());
 
         PubWaitingStatus waitingStatus = pubWaiting.getStatus();
-
         if (waitingStatus != PubWaitingStatus.WAITING && waitingStatus != PubWaitingStatus.CALL) {
             throw new BusinessException(BusinessErrorCode.NOT_IN_WAITING_PROCESS);
         }
@@ -46,13 +54,7 @@ public class PubTableSessionService {
 
     @Transactional
     public void endSession(PubTableSessionEndRequestDto request) {
-        PubTableSession pubTableSession = pubTableSessionRepository.findById(request.pubTableSessionId()).orElseThrow(
-                ()  -> new BusinessException(BusinessErrorCode.PUB_TABLE_SESSION_NOT_FOUND)
-        );
+        PubTableSession pubTableSession = getPubTableSessionById(request.pubTableSessionId());
         pubTableSession.guestExit();
-    }
-
-    public PubTableSession getCurrentPubTableSession(Long pubTableId) {
-        return pubTableSessionRepository.findByPubTableIdAndExitTimeIsNull(pubTableId);
     }
 }
