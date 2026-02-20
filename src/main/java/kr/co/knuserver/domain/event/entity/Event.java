@@ -66,8 +66,34 @@ public class Event extends BaseTimeEntity {
             .build();
     }
 
-    public Event changeActiveStatus(boolean isActive) {
-        this.isActive = isActive;
-        return this;
+    public void updateEvent(EventRequestDto request){
+        if(request.title() !=null){
+            this.title=request.title();
+        }
+        if (request.description() != null) {
+            this.description = request.description();
+        }
+        if (request.eventType() != null) {
+            this.eventType = request.eventType();
+        }
+        if (request.imageUrl() != null) {
+            this.imageUrl = request.imageUrl();
+        }
+
+        LocalDateTime updatedStartAt = this.eventDuration.getStartAt();
+        LocalDateTime updatedEndAt = this.eventDuration.getEndAt();
+
+        if (request.startAt() != null) {
+            updatedStartAt = request.startAt();
+        }
+        if (request.endAt() != null) {
+            updatedEndAt = request.endAt();
+        }
+
+        this.eventDuration = DurationVO.createDurationVO(updatedStartAt, updatedEndAt);
+
+        if (request.isActive() != null) {
+            this.isActive = request.isActive();
+        }
     }
 }
