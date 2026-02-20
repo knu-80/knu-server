@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/booth")
+@RequestMapping("/api/v1/booths")
 @RequiredArgsConstructor
 public class BoothApiController {
 
@@ -26,8 +26,8 @@ public class BoothApiController {
 
 
     // 가두모집 부스 생성
-    @PostMapping("/")
-    public ResponseEntity<BoothInfoResponseDto> createRecruitmentBooth(
+    @PostMapping
+    public ResponseEntity<ApiResponse<BoothInfoResponseDto>> createBooth(
         @RequestBody BoothRegisterRequestDto request
     ) {
         BoothInfoResponseDto result = boothService.registerBooth(request);
