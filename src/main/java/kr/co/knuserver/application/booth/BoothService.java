@@ -41,9 +41,8 @@ public class BoothService {
 
     // 부스 삭제
     public void deleteBooth(Long boothId) {
-        boothReader.getBoothOrThrow(boothId);
-
-        boothRepository.deleteById(boothId);
+        Booth booth = boothReader.getBoothOrThrow(boothId);
+        boothRepository.delete(booth);
     }
 
 }
