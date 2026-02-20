@@ -36,6 +36,10 @@ public enum BusinessErrorCode implements ErrorCode {
      */
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "C005", "접근 권한이 없습니다."),
 
+    /*
+     * 404 NOT_FOUND: 존재하지 않는 리소스
+     */
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C1001", "이벤트가 존재하지 않습니다."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
