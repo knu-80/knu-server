@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import kr.co.knuserver.global.base.BaseTimeEntity;
+import kr.co.knuserver.presentation.event.dto.EventRequestDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,7 +40,7 @@ public class Event extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EventType type;
+    private EventType eventType;
 
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
@@ -48,7 +49,7 @@ public class Event extends BaseTimeEntity {
     private DurationVO eventDuration;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    private Boolean isActive;
 
     public static Event createEvent(String title, String description, EventType type,
         String imageUrl, LocalDateTime startAt, LocalDateTime endAt) {
@@ -58,7 +59,7 @@ public class Event extends BaseTimeEntity {
         return Event.builder()
             .title(title)
             .description(description)
-            .type(type)
+            .eventType(type)
             .imageUrl(imageUrl)
             .eventDuration(eventDuration)
             .isActive(true)
