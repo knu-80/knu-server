@@ -11,13 +11,14 @@ import kr.co.knuserver.presentation.pubBooth.dto.PubBoothDetailResponseDto;
 import kr.co.knuserver.presentation.pubBooth.dto.PubBoothUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class PubBoothService {
 
     private final PubBoothRepository pubBoothRepository;
