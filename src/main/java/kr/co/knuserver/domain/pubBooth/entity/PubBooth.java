@@ -38,13 +38,4 @@ public class PubBooth extends BaseTimeEntity {
         this.memberId = memberId;
     }
 
-    public static PubBooth createPubBooth(String boothName, String clubName, String description, String accountNum, Long memberId) {
-        return PubBooth.builder()
-                .boothName(boothName)
-                .clubName(clubName)
-                .description(description)
-                .accountNum(accountNum)
-                .memberId(memberId)
-                .build();
-    }
 }

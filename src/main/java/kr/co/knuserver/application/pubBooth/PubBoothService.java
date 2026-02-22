@@ -40,13 +40,7 @@ public class PubBoothService {
 
     @Transactional
     public Long create(PubBoothCreateRequestDto requestDto) {
-        PubBooth pubBooth = PubBooth.createPubBooth(
-                requestDto.getBoothName(),
-                requestDto.getClubName(),
-                requestDto.getDescription(),
-                requestDto.getAccountNum(),
-                requestDto.getMemberId()
-        );
+        PubBooth pubBooth = requestDto.toEntity();
         PubBooth savedPubBooth = pubBoothRepository.save(pubBooth);
         return savedPubBooth.getId();
     }
@@ -54,13 +48,7 @@ public class PubBoothService {
     @Transactional
     public void update(Long id, PubBoothUpdateRequestDto requestDto) {
         PubBooth pubBooth = findPubBoothById(id);
-        pubBooth.update(
-                requestDto.getBoothName(),
-                requestDto.getClubName(),
-                requestDto.getDescription(),
-                requestDto.getAccountNum(),
-                requestDto.getMemberId()
-        );
+        requestDto.updateEntity(pubBooth);
     }
 
     @Transactional
