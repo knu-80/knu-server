@@ -2,6 +2,8 @@ package kr.co.knuserver.domain.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,10 +35,15 @@ public class Member {
     @Column(nullable = false)
     private String nickname;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     public static Member createMember(Long kakaoId, String nickname) {
         return Member.builder()
                 .kakaoId(kakaoId)
                 .nickname(nickname)
+                .role(Role.USER)
                 .build();
     }
 }
