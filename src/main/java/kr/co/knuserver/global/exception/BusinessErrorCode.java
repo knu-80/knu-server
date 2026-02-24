@@ -30,6 +30,7 @@ public enum BusinessErrorCode implements ErrorCode {
      * 401 UNAUTHORIZED: 인증되지 않은 사용자
      */
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "C004", "인증되지 않은 사용자입니다."),
+    INVALID_PIN(HttpStatus.UNAUTHORIZED, "C402", "잘못된 PIN입니다."),
 
     /*
      * 403 FORBIDDEN: 권한이 없는 사용자
@@ -39,7 +40,9 @@ public enum BusinessErrorCode implements ErrorCode {
     /*
      * 404 NOT_FOUND: 존재하지 않는 리소스
      */
-    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C1001", "이벤트가 존재하지 않습니다."),
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C102", "이벤트가 존재하지 않습니다."),
+    BOOTH_NOT_FOUND(HttpStatus.NOT_FOUND, "C101", "존재하지 않는 부스입니다."),
+    ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "C401", "관리자 계정을 찾을 수 없습니다."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
