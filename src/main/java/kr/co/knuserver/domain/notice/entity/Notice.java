@@ -43,4 +43,16 @@ public class Notice extends BaseTimeEntity {
                 .memberId(memberId)
                 .build();
     }
+
+    public void updateNotice(String title, String content, NoticeType type) {
+        if (title != null) {
+            this.title = title;
+        }
+        if (content != null) {
+            this.content = content;
+        }
+        if (type != null) {
+            this.type = type;
+        }
+    }
 }
