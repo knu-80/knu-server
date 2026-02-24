@@ -1,4 +1,4 @@
-package kr.co.knuserver.domain.RecruitmentBooth.entity;
+package kr.co.knuserver.domain.booth.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import kr.co.knuserver.global.base.BaseTimeEntity;
+import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,13 +23,13 @@ import org.hibernate.annotations.SoftDeleteType;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "recruitment_booth")
+@Table(name = "booth")
 @SoftDelete(columnName = "deleted_at", strategy = SoftDeleteType.TIMESTAMP)
-public class RecruitmentBooth extends BaseTimeEntity {
+public class Booth extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recruitment_booth_id")
+    @Column(name = "booth_id")
     private Long id;
 
     @Column(name = "member_id", nullable = false)
@@ -42,7 +43,7 @@ public class RecruitmentBooth extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RecruitmentBoothDivision division;
+    private BoothDivision division;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -56,15 +57,16 @@ public class RecruitmentBooth extends BaseTimeEntity {
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
-    public static RecruitmentBooth createRecruitmentBooth(Integer boothNumber, String name,
-        RecruitmentBoothDivision division, String description,
-        String applyLink, Boolean isActive, String imageUrl) {
+    public static Booth createBooth(Long memberId, Integer boothNumber, String name,
+        BoothDivision division, String description,
+        String applyLink, String imageUrl) {
 
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("부스 이름은 필수입니다.");
         }
 
-        return RecruitmentBooth.builder()
+        return Booth.builder()
+            .memberId(memberId)
             .boothNumber(boothNumber)
             .name(name)
             .division(division)
@@ -73,5 +75,32 @@ public class RecruitmentBooth extends BaseTimeEntity {
             .isActive(true)
             .imageUrl(imageUrl)
             .build();
+    }
+
+    public void updateFromDto(BoothUpdateRequestDto request) {
+        if (request.memberId() != null) {
+            this.memberId = request.memberId();
+        }
+        if (request.boothNumber() != null) {
+            this.boothNumber = request.boothNumber();
+        }
+        if (request.name() != null) {
+            this.name = request.name();
+        }
+        if (request.division() != null) {
+            this.division = request.division();
+        }
+        if (request.description() != null) {
+            this.description = request.description();
+        }
+        if (request.applyLink() != null) {
+            this.applyLink = request.applyLink();
+        }
+        if (request.imageUrl() != null) {
+            this.imageUrl = request.imageUrl();
+        }
+        if (request.isActive() != null) {
+            this.isActive = request.isActive();
+        }
     }
 }
