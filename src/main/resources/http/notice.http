@@ -1,0 +1,122 @@
+### 공지사항 작성 - 일반 공지 (GENERAL)
+POST http://localhost:8080/api/v1/notices
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+{
+  "title": "2026 축제 일정 안내",
+  "content": "2026년 5월 축제가 진행될 예정입니다. 자세한 일정은 추후 공지드리겠습니다.",
+  "type": "GENERAL"
+}
+
+### 공지사항 작성 - 분실물 공지 (LOST_FOUND)
+POST http://localhost:8080/api/v1/notices
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+{
+  "title": "지갑 분실물 신고",
+  "content": "5월 3일 공학관 앞에서 검정색 지갑이 발견되었습니다. 분실하신 분은 학생처로 방문해주세요.",
+  "type": "LOST_FOUND"
+}
+
+### 공지사항 작성 - 인증 토큰 없음 (실패: 401)
+POST http://localhost:8080/api/v1/notices
+Content-Type: application/json
+
+{
+  "title": "인증 없이 작성 시도",
+  "content": "토큰 없이 요청하면 401이 반환되어야 합니다.",
+  "type": "GENERAL"
+}
+
+### 공지사항 작성 - 잘못된 토큰 (실패: 401)
+POST http://localhost:8080/api/v1/notices
+Content-Type: application/json
+Authorization: Bearer invalid.token.here
+
+{
+  "title": "잘못된 토큰으로 작성 시도",
+  "content": "유효하지 않은 토큰으로 요청하면 401이 반환되어야 합니다.",
+  "type": "GENERAL"
+}
+
+### 공지사항 작성 - 필수 필드 누락 (실패: 400)
+POST http://localhost:8080/api/v1/notices
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+{
+  "title": "",
+  "content": "제목이 비어있으면 400이 반환되어야 합니다.",
+  "type": "GENERAL"
+}
+
+### 공지사항 작성 - 잘못된 type 값 (실패: 500)
+POST http://localhost:8080/api/v1/notices
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+{
+  "title": "잘못된 타입 테스트",
+  "content": "존재하지 않는 NoticeType 값입니다.",
+  "type": "INVALID_TYPE"
+}
+
+### 공지사항 수정 - 제목만 변경
+PATCH http://localhost:8080/api/v1/notices/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+{
+  "title": "수정된 제목"
+}
+
+### 공지사항 수정 - 내용과 타입 변경
+PATCH http://localhost:8080/api/v1/notices/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+{
+  "content": "수정된 공지 내용입니다.",
+  "type": "LOST_FOUND"
+}
+
+### 공지사항 수정 - 모든 필드 변경
+PATCH http://localhost:8080/api/v1/notices/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+{
+  "title": "전체 수정된 제목",
+  "content": "전체 수정된 내용입니다.",
+  "type": "GENERAL"
+}
+
+### 공지사항 수정 - 존재하지 않는 공지 (실패: 404)
+PATCH http://localhost:8080/api/v1/notices/99999
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+{
+  "title": "존재하지 않는 공지 수정 시도"
+}
+
+### 공지사항 수정 - 인증 토큰 없음 (실패: 401)
+PATCH http://localhost:8080/api/v1/notices/1
+Content-Type: application/json
+
+{
+  "title": "토큰 없이 수정 시도"
+}
+
+### 공지사항 삭제
+DELETE http://localhost:8080/api/v1/notices/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+### 공지사항 삭제 - 존재하지 않는 공지 (실패: 404)
+DELETE http://localhost:8080/api/v1/notices/99999
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcxOTUxMDAzLCJleHAiOjE3NzE5NTQ2MDN9.2n9nr7UFAFv5saGmUJWHACrgaCmoL_-ACJceUWs87tmmg-hdDC22ts_sIl8WwPM4
+
+### 공지사항 삭제 - 인증 토큰 없음 (실패: 401)
+DELETE http://localhost:8080/api/v1/notices/1
