@@ -2,7 +2,7 @@ package kr.co.knuserver.presentation.pubBooth;
 
 import kr.co.knuserver.presentation.pubBooth.dto.PubBoothDetailResponseDto;
 import kr.co.knuserver.presentation.pubBooth.dto.PubBoothResponseDto;
-import kr.co.knuserver.application.pubBooth.PubBoothService;
+import kr.co.knuserver.application.pubBooth.PubBoothQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/pub-booths")
 public class PubBoothController {
 
-    private final PubBoothService pubBoothService;
+    private final PubBoothQueryService pubBoothQueryService;
 
     @GetMapping
     public ResponseEntity<List<PubBoothResponseDto>> findAll() {
-        List<PubBoothResponseDto> pubBooths = pubBoothService.findAll().stream()
+        List<PubBoothResponseDto> pubBooths = pubBoothQueryService.findAll().stream()
                 .map(PubBoothResponseDto::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(pubBooths);
@@ -30,7 +30,7 @@ public class PubBoothController {
 
     @GetMapping("/{pubBoothId}")
     public ResponseEntity<PubBoothDetailResponseDto> findById(@PathVariable Long pubBoothId) {
-        PubBoothDetailResponseDto pubBoothDetailResponseDto = pubBoothService.findById(pubBoothId);
+        PubBoothDetailResponseDto pubBoothDetailResponseDto = pubBoothQueryService.findById(pubBoothId);
         return ResponseEntity.ok(pubBoothDetailResponseDto);
     }
 }
