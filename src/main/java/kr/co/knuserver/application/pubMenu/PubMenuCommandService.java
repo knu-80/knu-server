@@ -8,37 +8,29 @@ import kr.co.knuserver.presentation.pubMenu.dto.PubMenuCreateRequestDto;
 import kr.co.knuserver.presentation.pubMenu.dto.PubMenuUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-public class PubMenuService {
+@Transactional
+public class PubMenuCommandService {
 
     private final PubMenuRepository pubMenuRepository;
+    private final PubMenuQueryService pubMenuQueryService; // Inject QueryService to find entities
 
-    public PubMenu findPubMenuById(Long id) {
-        return pubMenuRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(BusinessErrorCode.PUB_MENU_NOT_FOUND));
-    }
-
-    @Transactional
     public Long create(PubMenuCreateRequestDto requestDto) {
         PubMenu pubMenu = requestDto.toEntity();
         PubMenu savedPubMenu = pubMenuRepository.save(pubMenu);
         return savedPubMenu.getId();
     }
 
-    @Transactional
     public void update(Long id, PubMenuUpdateRequestDto requestDto) {
-        PubMenu pubMenu = findPubMenuById(id);
+        PubMenu pubMenu = pubMenuQueryService.findPubMenuById(id); // Use QueryService to find
         requestDto.updateEntity(pubMenu);
     }
 
-    @Transactional
     public void delete(Long id) {
-        PubMenu pubMenu = findPubMenuById(id);
+        PubMenu pubMenu = pubMenuQueryService.findPubMenuById(id); // Use QueryService to find
         pubMenuRepository.delete(pubMenu);
     }
 }
