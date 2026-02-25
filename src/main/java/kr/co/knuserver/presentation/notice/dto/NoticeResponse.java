@@ -1,15 +1,41 @@
 package kr.co.knuserver.presentation.notice.dto;
 
+import kr.co.knuserver.domain.notice.entity.LostFoundDetail;
 import kr.co.knuserver.domain.notice.entity.Notice;
 
-public record NoticeResponse(Long noticeId, String title, String content, String type) {
+import java.util.List;
 
-    public static NoticeResponse fromEntity(Notice notice) {
+public record NoticeResponse(
+        Long noticeId,
+        String title,
+        String content,
+        String type,
+        LostFoundDetailResponse lostFoundDetail,
+        List<String> imageUrls
+) {
+
+    public record LostFoundDetailResponse(String foundPlace, String keepingPlace, String description) {
+        public static LostFoundDetailResponse from(LostFoundDetail detail) {
+            return new LostFoundDetailResponse(detail.getFoundPlace(), detail.getKeepingPlace(), detail.getDescription());
+        }
+    }
+
+    public static NoticeResponse fromEntity(Notice notice, List<String> imageUrls) {
+        LostFoundDetailResponse lostFoundDetailResponse = notice.getLostFoundDetail() != null
+                ? LostFoundDetailResponse.from(notice.getLostFoundDetail())
+                : null;
+
         return new NoticeResponse(
                 notice.getId(),
                 notice.getTitle(),
                 notice.getContent(),
-                notice.getType().name()
+                notice.getType().name(),
+                lostFoundDetailResponse,
+                imageUrls
         );
+    }
+
+    public static NoticeResponse fromEntity(Notice notice) {
+        return fromEntity(notice, List.of());
     }
 }
