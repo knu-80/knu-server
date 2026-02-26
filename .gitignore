@@ -39,3 +39,8 @@ out/
 .vscode/
 
 .logs/
+
+### HTTP test images ###
+src/main/resources/http/*.png
+src/main/resources/http/*.jpg
+src/main/resources/http/*.jpeg
