@@ -31,7 +31,7 @@ public class NoticeCommandService {
     private final S3Uploader s3Uploader;
 
     public NoticeResponse createNotice(NoticeCreateRequest request, List<MultipartFile> images, Long memberId) {
-        NoticeType type = NoticeType.valueOf(request.type());
+        NoticeType type = parseNoticeType(request.type());
         LostFoundDetail lostFoundDetail = toLostFoundDetail(type, request.lostFoundDetail());
 
         Notice notice = Notice.createNotice(request.title(), request.content(), type, memberId, lostFoundDetail);
@@ -46,7 +46,7 @@ public class NoticeCommandService {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
 
-        NoticeType type = request.type() != null ? NoticeType.valueOf(request.type()) : null;
+        NoticeType type = request.type() != null ? parseNoticeType(request.type()) : null;
         LostFoundDetail lostFoundDetail = request.lostFoundDetail() != null
                 ? new LostFoundDetail(
                         request.lostFoundDetail().foundPlace(),
@@ -72,6 +72,14 @@ public class NoticeCommandService {
         noticeImageRepository.deleteAllByNoticeId(noticeId);
 
         noticeRepository.delete(notice);
+    }
+
+    private NoticeType parseNoticeType(String type) {
+        try {
+            return NoticeType.valueOf(type);
+        } catch (IllegalArgumentException e) {
+            throw new BusinessException(BusinessErrorCode.INVALID_TYPE_VALUE);
+        }
     }
 
     private LostFoundDetail toLostFoundDetail(NoticeType type, NoticeCreateRequest.LostFoundDetailRequest request) {
