@@ -40,7 +40,7 @@ public class NoticeCommandController {
             @PathVariable("notice-id") Long noticeId,
             @RequestBody NoticeUpdateRequest request
     ) {
-        NoticeResponse result = noticeCommandService.updateNotice(noticeId, request);
+        NoticeResponse result = noticeCommandService.updateNotice(noticeId, request, memberId);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
@@ -49,7 +49,7 @@ public class NoticeCommandController {
             @MemberId Long memberId,
             @PathVariable("notice-id") Long noticeId
     ) {
-        noticeCommandService.deleteNotice(noticeId);
+        noticeCommandService.deleteNotice(noticeId, memberId);
         return ResponseEntity.ok(ApiResponse.success());
     }
 }

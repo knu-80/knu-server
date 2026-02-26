@@ -42,9 +42,11 @@ public class NoticeCommandService {
         return NoticeResponse.fromEntity(saved, imageUrls);
     }
 
-    public NoticeResponse updateNotice(Long noticeId, NoticeUpdateRequest request) {
+    public NoticeResponse updateNotice(Long noticeId, NoticeUpdateRequest request, Long memberId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
+
+        validateAuthor(notice, memberId);
 
         NoticeType type = request.type() != null ? parseNoticeType(request.type()) : null;
         LostFoundDetail lostFoundDetail = request.lostFoundDetail() != null
@@ -63,15 +65,23 @@ public class NoticeCommandService {
         return NoticeResponse.fromEntity(notice, imageUrls);
     }
 
-    public void deleteNotice(Long noticeId) {
+    public void deleteNotice(Long noticeId, Long memberId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
+
+        validateAuthor(notice, memberId);
 
         noticeImageRepository.findAllByNoticeId(noticeId)
                 .forEach(image -> s3Uploader.delete(image.getImageUrl()));
         noticeImageRepository.deleteAllByNoticeId(noticeId);
 
         noticeRepository.delete(notice);
+    }
+
+    private void validateAuthor(Notice notice, Long memberId) {
+        if (!notice.getMemberId().equals(memberId)) {
+            throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
+        }
     }
 
     private NoticeType parseNoticeType(String type) {
