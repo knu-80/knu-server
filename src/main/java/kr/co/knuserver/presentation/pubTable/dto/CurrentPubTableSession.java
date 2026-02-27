@@ -8,7 +8,7 @@ import lombok.Builder;
 @Builder
 public record CurrentPubTableSession(
         @NotNull LocalDateTime entryTime,
-        @NotNull int guestCount
+        int guestCount
 ) {
         public static CurrentPubTableSession fromEntity(PubTableSession pubTableSession) {
                 return CurrentPubTableSession.builder()

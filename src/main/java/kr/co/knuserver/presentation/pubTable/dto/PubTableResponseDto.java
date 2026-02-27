@@ -10,7 +10,7 @@ import lombok.Builder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record PubTableResponseDto(
         @NotNull Long pubTableId,
-        @NotNull int tableNum,
+        int tableNum,
         @NotNull Long pubBoothId,
         @NotNull String status,
         CurrentPubTableSession currentPubTableSession
