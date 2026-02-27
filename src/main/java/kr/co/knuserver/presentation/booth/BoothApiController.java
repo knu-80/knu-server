@@ -2,6 +2,7 @@ package kr.co.knuserver.presentation.booth;
 
 
 import jakarta.validation.Valid;
+import java.util.List;
 import kr.co.knuserver.application.booth.BoothCommandService;
 import kr.co.knuserver.application.booth.BoothQueryService;
 import kr.co.knuserver.global.exception.ApiResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,6 +35,18 @@ public class BoothApiController implements BoothApiControllerDocs {
         @PathVariable(name = "booth-id") Long boothId
     ) {
         BoothInfoResponseDto result = boothQueryService.getBooth(boothId);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse.success(result));
+    }
+
+    // 키워드 단위 가두모집 부스 리스트 조회
+    @Override
+    @GetMapping("/list")
+    public ResponseEntity<ApiResponse<List<BoothInfoResponseDto>>> searchBooths(
+        @RequestParam(name = "keyword", required = false) String keyword
+    ) {
+        List<BoothInfoResponseDto> result = boothQueryService.searchBoothsByKeyword(keyword);
+
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.success(result));
     }
