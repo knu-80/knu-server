@@ -25,12 +25,13 @@ public enum BusinessErrorCode implements ErrorCode {
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "잘못된 입력값입니다."),
     INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C002", "잘못된 타입이 입력되었습니다."),
     MISSING_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C003", "필수 입력값이 누락되었습니다."),
-    NOT_IN_WAITING_PROCESS(HttpStatus.BAD_REQUEST, "C2003", "웨이팅 등록 혹은 입장 호출 상태가 아닙니다."),
+    NOT_IN_WAITING_PROCESS(HttpStatus.BAD_REQUEST, "C203", "웨이팅 등록 혹은 입장 호출 상태가 아닙니다."),
 
     /*
      * 401 UNAUTHORIZED: 인증되지 않은 사용자
      */
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "C004", "인증되지 않은 사용자입니다."),
+    INVALID_PIN(HttpStatus.UNAUTHORIZED, "C402", "잘못된 PIN입니다."),
 
     /*
      * 403 FORBIDDEN: 권한이 없는 사용자
@@ -40,9 +41,12 @@ public enum BusinessErrorCode implements ErrorCode {
     /*
      * 404 NOT_FOUND: 존재하지 않는 리소스
      */
-    PUB_TABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "C2001", "존재하지 않는 테이블입니다."),
-    PUB_WAITING_NOT_FOUND(HttpStatus.NOT_FOUND, "C2002", "존재하지 않는 웨이팅입니다."),
-    PUB_TABLE_SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "C2002", "존재하지 않는 세션입니다."),
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C102", "이벤트가 존재하지 않습니다."),
+    BOOTH_NOT_FOUND(HttpStatus.NOT_FOUND, "C101", "존재하지 않는 부스입니다."),
+    ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "C401", "관리자 계정을 찾을 수 없습니다."),
+    PUB_TABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "C201", "존재하지 않는 테이블입니다."),
+    PUB_WAITING_NOT_FOUND(HttpStatus.NOT_FOUND, "C202", "존재하지 않는 웨이팅입니다."),
+    PUB_TABLE_SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "C203", "존재하지 않는 세션입니다."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
