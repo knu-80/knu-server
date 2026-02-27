@@ -27,7 +27,8 @@ public class S3Uploader {
     private String region;
 
     public String upload(MultipartFile file, String folder) {
-        String key = folder + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String extension = extractExtension(file.getOriginalFilename());
+        String key = folder + "/" + UUID.randomUUID() + extension;
         try {
             s3Client.putObject(
                     PutObjectRequest.builder()
@@ -41,6 +42,13 @@ public class S3Uploader {
             throw new BusinessException(BusinessErrorCode.INTERNAL_SERVER_ERROR);
         }
         return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + key;
+    }
+
+    private String extractExtension(String originalFilename) {
+        if (originalFilename == null || !originalFilename.contains(".")) {
+            return "";
+        }
+        return "." + originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
     }
 
     public void delete(String imageUrl) {
