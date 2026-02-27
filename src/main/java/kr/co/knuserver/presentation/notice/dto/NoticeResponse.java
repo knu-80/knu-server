@@ -31,7 +31,7 @@ public record NoticeResponse(
                 notice.getContent(),
                 notice.getType().name(),
                 lostFoundDetailResponse,
-                imageUrls
+                imageUrls == null ? List.of() : List.copyOf(imageUrls)
         );
     }
 
