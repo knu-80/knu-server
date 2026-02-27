@@ -1,6 +1,7 @@
 package kr.co.knuserver.presentation.booth;
 
 
+import jakarta.validation.Valid;
 import kr.co.knuserver.application.booth.BoothCommandService;
 import kr.co.knuserver.application.booth.BoothQueryService;
 import kr.co.knuserver.global.exception.ApiResponse;
@@ -41,7 +42,7 @@ public class BoothApiController implements BoothApiControllerDocs {
     @PatchMapping("/update/{booth-id}")
     public ResponseEntity<ApiResponse<BoothInfoResponseDto>> updateBooth(
         @PathVariable(name = "booth-id") Long boothId,
-        @RequestBody BoothUpdateRequestDto request
+        @Valid @RequestBody BoothUpdateRequestDto request
     ) {
         BoothInfoResponseDto result = boothCommandService.updateBooth(boothId, request);
         return ResponseEntity.status(HttpStatus.OK)

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothRegisterRequestDto;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public interface AdminBoothApiControllerDocs {
             @ApiResponse(responseCode = "400", description = "입력값이 잘못되었습니다.")
     })
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> createBooth(
-            @RequestBody BoothRegisterRequestDto request);
+            @Valid @RequestBody BoothRegisterRequestDto request);
 
     @Operation(summary = "가두모집 부스 삭제", description = "특정 가두모집 부스를 삭제합니다.")
     @ApiResponses(value = {

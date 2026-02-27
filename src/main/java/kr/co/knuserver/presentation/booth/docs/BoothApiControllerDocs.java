@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,5 @@ public interface BoothApiControllerDocs {
     })
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> updateBooth(
             @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId,
-            @RequestBody BoothUpdateRequestDto request);
+            @Valid @RequestBody BoothUpdateRequestDto request);
 }
