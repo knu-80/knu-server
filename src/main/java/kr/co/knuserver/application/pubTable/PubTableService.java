@@ -61,8 +61,6 @@ public class PubTableService {
 
     @Transactional
     public PubTableResponseDto updatePubTable(PubTableRequestDto request, Long pubTableId) {
-        validateDuplicateTable(request.tableNum(), request.pubBoothId());
-
         PubTable pubTable = getPubTableById(pubTableId);
         pubTable.updatePubTable(request);
         return PubTableResponseDto.fromEntity(pubTable);
