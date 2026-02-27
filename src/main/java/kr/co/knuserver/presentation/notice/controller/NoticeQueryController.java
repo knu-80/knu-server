@@ -2,8 +2,8 @@ package kr.co.knuserver.presentation.notice.controller;
 
 import kr.co.knuserver.application.notice.NoticeQueryService;
 import kr.co.knuserver.global.exception.ApiResponse;
-import kr.co.knuserver.presentation.notice.dto.NoticeDetailResponse;
-import kr.co.knuserver.presentation.notice.dto.NoticeListResponse;
+import kr.co.knuserver.presentation.notice.dto.response.NoticeDetailResponse;
+import kr.co.knuserver.presentation.notice.dto.response.NoticeListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

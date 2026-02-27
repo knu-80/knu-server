@@ -8,9 +8,9 @@ import kr.co.knuserver.domain.notice.repository.NoticeImageRepository;
 import kr.co.knuserver.domain.notice.repository.NoticeRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
-import kr.co.knuserver.presentation.notice.dto.NoticeDetailResponse;
+import kr.co.knuserver.presentation.notice.dto.response.NoticeDetailResponse;
 
-import kr.co.knuserver.presentation.notice.dto.NoticeListResponse;
+import kr.co.knuserver.presentation.notice.dto.response.NoticeListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

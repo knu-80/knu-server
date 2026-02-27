@@ -1,4 +1,4 @@
-package kr.co.knuserver.presentation.notice.dto;
+package kr.co.knuserver.presentation.notice.dto.response;
 
 import kr.co.knuserver.domain.member.entity.Member;
 import kr.co.knuserver.domain.notice.entity.Notice;

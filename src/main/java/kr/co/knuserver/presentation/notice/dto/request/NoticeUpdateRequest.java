@@ -1,4 +1,4 @@
-package kr.co.knuserver.presentation.notice.dto;
+package kr.co.knuserver.presentation.notice.dto.request;
 
 public record NoticeUpdateRequest(
         String title,
