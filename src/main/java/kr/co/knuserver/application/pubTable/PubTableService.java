@@ -10,6 +10,7 @@ import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.presentation.pubTable.dto.PubTableRequestDto;
 import kr.co.knuserver.presentation.pubTable.dto.PubTableResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,9 +46,15 @@ public class PubTableService {
     public PubTableResponseDto createPubTable(PubTableRequestDto request) {
         validateDuplicateTable(request.tableNum(), request.pubBoothId());
 
-        PubTable pubTable = request.toEntity();
-        pubTableRepository.save(pubTable);
-        return PubTableResponseDto.fromEntity(pubTable);
+        try {
+            PubTable pubTable = request.toEntity();
+            pubTableRepository.saveAndFlush(pubTable);
+
+            return PubTableResponseDto.fromEntity(pubTable);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException(BusinessErrorCode.ALREADY_EXISTS);
+        }
     }
 
     public List<PubTableResponseDto> getAllPubTables(Long pubBoothId) {
