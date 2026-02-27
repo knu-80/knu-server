@@ -9,6 +9,7 @@ import kr.co.knuserver.domain.notice.repository.NoticeRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.presentation.notice.dto.NoticeDetailResponse;
+
 import kr.co.knuserver.presentation.notice.dto.NoticeListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -47,11 +48,9 @@ public class NoticeQueryService {
                 ));
 
         return notices.stream()
+                .filter(notice -> memberMap.containsKey(notice.getMemberId()))
                 .map(notice -> {
                     Member author = memberMap.get(notice.getMemberId());
-                    if (author == null) {
-                        throw new BusinessException(BusinessErrorCode.UNAUTHORIZED_USER);
-                    }
                     List<String> imageUrls = imageUrlMap.getOrDefault(notice.getId(), List.of());
                     return NoticeListResponse.fromEntity(notice, author, imageUrls);
                 })
@@ -63,7 +62,7 @@ public class NoticeQueryService {
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
 
         Member author = memberRepository.findById(notice.getMemberId())
-                .orElseThrow(() -> new BusinessException(BusinessErrorCode.UNAUTHORIZED_USER));
+                .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
 
         List<String> imageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
                 .map(NoticeImage::getImageUrl)
