@@ -2,6 +2,8 @@ package kr.co.knuserver.domain.notice.entity;
 
 import jakarta.persistence.*;
 import kr.co.knuserver.global.base.BaseTimeEntity;
+import kr.co.knuserver.global.exception.BusinessErrorCode;
+import kr.co.knuserver.global.exception.BusinessException;
 import lombok.*;
 import org.hibernate.annotations.SoftDelete;
 import org.hibernate.annotations.SoftDeleteType;
@@ -55,6 +57,9 @@ public class Notice extends BaseTimeEntity {
             this.content = content;
         }
         if (lostFoundDetail != null) {
+            if (this.type != NoticeType.LOST_FOUND) {
+                throw new BusinessException(BusinessErrorCode.INVALID_INPUT_VALUE);
+            }
             this.lostFoundDetail = lostFoundDetail;
         }
     }
