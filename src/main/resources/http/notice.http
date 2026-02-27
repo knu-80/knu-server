@@ -1,7 +1,7 @@
 ### 일반 공지 등록 - 이미지 없음
 POST http://localhost:8080/api/v1/notices
 Content-Type: multipart/form-data; boundary=boundary
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 --boundary
 Content-Disposition: form-data; name="data"
@@ -13,7 +13,7 @@ Content-Type: application/json
 ### 일반 공지 등록 - 이미지 포함
 POST http://localhost:8080/api/v1/notices
 Content-Type: multipart/form-data; boundary=boundary
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 --boundary
 Content-Disposition: form-data; name="data"
@@ -30,7 +30,7 @@ Content-Type: image/png
 ### 분실물 공지 등록 - 이미지 없음
 POST http://localhost:8080/api/v1/notices
 Content-Type: multipart/form-data; boundary=boundary
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 --boundary
 Content-Disposition: form-data; name="data"
@@ -42,7 +42,7 @@ Content-Type: application/json
 ### 분실물 공지 등록 - 이미지 포함
 POST http://localhost:8080/api/v1/notices
 Content-Type: multipart/form-data; boundary=boundary
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 --boundary
 Content-Disposition: form-data; name="data"
@@ -87,7 +87,7 @@ Content-Type: application/json
 ### 공지사항 작성 - 필수 필드 누락 (실패: 400)
 POST http://localhost:8080/api/v1/notices
 Content-Type: multipart/form-data; boundary=boundary
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcyMDk2NTI1LCJleHAiOjE3NzIxMDAxMjV9.Z3LmIPvma1O0sxHTeiFMtSL7skYs6Dhfmb2GuKQp9oAmtMBN-C7bd7Ivm7J6tHKo
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 --boundary
 Content-Disposition: form-data; name="data"
@@ -99,7 +99,7 @@ Content-Type: application/json
 ### 공지사항 작성 - LOST_FOUND인데 lostFoundDetail 누락 (실패: 400)
 POST http://localhost:8080/api/v1/notices
 Content-Type: multipart/form-data; boundary=boundary
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 --boundary
 Content-Disposition: form-data; name="data"
@@ -108,34 +108,34 @@ Content-Type: application/json
 {"title": "분실물 신고", "content": "내용", "type": "LOST_FOUND"}
 --boundary--
 
-### 공지사항 작성 - 잘못된 type 값 (실패: 500)
+### 공지사항 작성 - 잘못된 type 값 (실패: 400)
 POST http://localhost:8080/api/v1/notices
-Content-Type: application/json
-Authorization: Bearer
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer {{ACCESS_TOKEN}}
 
-{
-  "title": "잘못된 타입 테스트",
-  "content": "존재하지 않는 NoticeType 값입니다.",
-  "type": "INVALID_TYPE"
-}
+--boundary
+Content-Disposition: form-data; name="data"
+Content-Type: application/json
+
+{"title": "잘못된 타입 테스트", "content": "존재하지 않는 NoticeType 값입니다.", "type": "INVALID_TYPE"}
+--boundary--
 
 ### 공지사항 수정 - 제목만 변경
 PATCH http://localhost:8080/api/v1/notices/1
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzcyMTc3MDQzLCJleHAiOjE3NzIxODA2NDN9.AgU6pxD_qTAfZTIVBLW5YzSWmbF0RdQLO3WsMLOw5rJnkdxPiHaCbiaLC0zBKFu9
 
 {
   "title": "수정된 제목"
 }
 
-### 공지사항 수정 - 내용과 타입 변경 (GENERAL → LOST_FOUND, lostFoundDetail 포함)
-PATCH http://localhost:8080/api/v1/notices/1
+### 공지사항 수정 - 내용과 lostFoundDetail 변경
+PATCH http://localhost:8080/api/v1/notices/2
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 {
   "content": "수정된 공지 내용입니다.",
-  "type": "LOST_FOUND",
   "lostFoundDetail": {
     "foundPlace": "도서관 1층",
     "keepingPlace": "행정실",
@@ -146,7 +146,7 @@ Authorization: Bearer
 ### 공지사항 수정 - lostFoundDetail만 변경
 PATCH http://localhost:8080/api/v1/notices/1
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 {
   "lostFoundDetail": {
@@ -156,21 +156,20 @@ Authorization: Bearer
   }
 }
 
-### 공지사항 수정 - 모든 필드 변경
+### 공지사항 수정 - 제목, 내용 모두 변경
 PATCH http://localhost:8080/api/v1/notices/1
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 {
   "title": "전체 수정된 제목",
-  "content": "전체 수정된 내용입니다.",
-  "type": "GENERAL"
+  "content": "전체 수정된 내용입니다."
 }
 
 ### 공지사항 수정 - 존재하지 않는 공지 (실패: 404)
 PATCH http://localhost:8080/api/v1/notices/99999
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 {
   "title": "존재하지 않는 공지 수정 시도"
@@ -186,11 +185,11 @@ Content-Type: application/json
 
 ### 공지사항 삭제
 DELETE http://localhost:8080/api/v1/notices/1
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 ### 공지사항 삭제 - 존재하지 않는 공지 (실패: 404)
 DELETE http://localhost:8080/api/v1/notices/99999
-Authorization: Bearer
+Authorization: Bearer {{ACCESS_TOKEN}}
 
 ### 공지사항 삭제 - 인증 토큰 없음 (실패: 401)
 DELETE http://localhost:8080/api/v1/notices/1
@@ -205,7 +204,7 @@ GET http://localhost:8080/api/v1/notices?lastId=12&size=10
 GET http://localhost:8080/api/v1/notices
 
 ### 공지사항 단건 조회
-GET http://localhost:8080/api/v1/notices/11
+GET http://localhost:8080/api/v1/notices/3
 
 ### 공지사항 단건 조회 - 존재하지 않는 공지 (실패: 404)
 GET http://localhost:8080/api/v1/notices/99999
