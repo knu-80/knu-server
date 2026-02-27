@@ -2,6 +2,7 @@ package kr.co.knuserver.presentation.booth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import kr.co.knuserver.domain.booth.entity.Booth;
 import kr.co.knuserver.domain.booth.entity.BoothDivision;
@@ -10,9 +11,11 @@ public record BoothRegisterRequestDto(
     Long id,
 
     @NotNull(message = "부스 운영자 member ID는 필수입니다.")
+    @Positive(message = "member ID는 양수만 입력 가능합니다.")
     Long memberId,
 
     @NotNull(message = "부스 번호는 필수입니다.")
+    @Positive(message = "boothNumber는 양수만 입력 가능합니다.")
     Integer boothNumber,
 
     @NotBlank(message = "부스 이름은 필수입니다.")
