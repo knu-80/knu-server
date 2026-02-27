@@ -11,11 +11,12 @@ import kr.co.knuserver.presentation.pubTable.dto.PubTableRequestDto;
 import kr.co.knuserver.presentation.pubTable.dto.PubTableResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class PubTableService {
 
     private final PubTableRepository pubTableRepository;
