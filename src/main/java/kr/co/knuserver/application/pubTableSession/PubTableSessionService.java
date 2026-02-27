@@ -41,6 +41,12 @@ public class PubTableSessionService {
     @Transactional
     public void startSession(PubTableSessionStartRequestDto request) {
         PubTable pubTable = pubTableService.getPubTableById(request.pubTableId());
+
+        PubTableSession currentSession = getCurrentPubTableSession(pubTable.getId());
+        if (currentSession != null) {
+            throw new BusinessException(BusinessErrorCode.PUB_SESSION_ALREADY_EXISTS);
+        }
+
         PubWaiting pubWaiting = pubWaitingService.getPubWaitingById(request.pubWaitingId());
 
         PubWaitingStatus waitingStatus = pubWaiting.getStatus();

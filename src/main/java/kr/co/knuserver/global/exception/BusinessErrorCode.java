@@ -57,6 +57,7 @@ public enum BusinessErrorCode implements ErrorCode {
      * 409 CONFLICT: 리소스 충돌 (중복 데이터 등)
      */
     ALREADY_EXISTS(HttpStatus.CONFLICT, "C008", "이미 존재하는 데이터입니다."),
+    PUB_SESSION_ALREADY_EXISTS(HttpStatus.CONFLICT, "C205", "해당 테이블에 세션이 존재합니다."),
 
     /*
      * 500 INTERNAL_SERVER_ERROR: 내부 서버 오류
