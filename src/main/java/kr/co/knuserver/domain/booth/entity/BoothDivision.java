@@ -11,7 +11,10 @@ public enum BoothDivision {
     CULTURE_ART_DIVISION("문예분과"),
     SPORTS_DIVISION("체육분과"),
     SOCIAL_DIVISION("사회분과"),
-    RELIGIOUS_DIVISION("종교분과");
+    RELIGIOUS_DIVISION("종교분과"),
+    MANAGEMENT("총동아리연합회"),
+    EXTERNAL_SUPPORT("외부부스");
+
 
     private final String description;
 }
