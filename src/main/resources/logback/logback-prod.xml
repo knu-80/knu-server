@@ -39,9 +39,17 @@
     <discardingThreshold>0</discardingThreshold>
     <includeCallerData>false</includeCallerData> </appender>
 
-  <logger name="org.springframework" level="ERROR"/>
-  <logger name="kr.co.knuserver" level="INFO"/> <root level="INFO">
-  <appender-ref ref="STDOUT"/>
-  <appender-ref ref="ASYNC_FILE"/>
+  <logger name="kr.co.knuserver" level="DEBUG"/>
+
+  <logger name="org.springframework.web" level="DEBUG"/>
+  <logger name="org.springframework.boot.autoconfigure" level="DEBUG"/>
+  <logger name="org.springframework.web" level="DEBUG"/>
+  <logger name="org.hibernate.SQL" level="DEBUG"/>
+  <logger name="org.hibernate.orm.jdbc.bind" level="DEBUG"/>
+  <logger name="org.hibernate.engine.jdbc.env.spi.JdbcEnvironment" level="DEBUG"/>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="ASYNC_FILE"/>
 </root>
 </configuration>
