@@ -16,7 +16,7 @@ public record NoticeListResponse(
         String type,
         List<String> imageUrls
 ) {
-    private static final int PREVIEW_LENGTH = 100;
+    private static final int PREVIEW_LENGTH = 30;
 
     public static NoticeListResponse fromEntity(Notice notice, Member author, List<String> imageUrls) {
         String content = notice.getContent();
