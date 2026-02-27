@@ -52,7 +52,20 @@ public class S3Uploader {
     }
 
     public void delete(String imageUrl) {
-        String key = imageUrl.substring(imageUrl.indexOf(".amazonaws.com/") + ".amazonaws.com/".length());
+        if (imageUrl == null || imageUrl.isBlank()) {
+            throw new BusinessException(BusinessErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        int markerIndex = imageUrl.indexOf(".amazonaws.com/");
+        if (markerIndex == -1) {
+            throw new BusinessException(BusinessErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        String key = imageUrl.substring(markerIndex + ".amazonaws.com/".length());
+        if (key.isBlank()) {
+            throw new BusinessException(BusinessErrorCode.INVALID_INPUT_VALUE);
+        }
+
         s3Client.deleteObject(
                 DeleteObjectRequest.builder()
                         .bucket(bucket)
