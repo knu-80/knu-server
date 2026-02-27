@@ -13,6 +13,7 @@ import kr.co.knuserver.presentation.notice.dto.NoticeCreateRequest;
 import kr.co.knuserver.presentation.notice.dto.NoticeResponse;
 import kr.co.knuserver.presentation.notice.dto.NoticeUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,7 @@ public class NoticeCommandService {
     private final NoticeRepository noticeRepository;
     private final NoticeImageRepository noticeImageRepository;
     private final S3Uploader s3Uploader;
+    private final ApplicationEventPublisher eventPublisher;
 
     public NoticeResponse createNotice(NoticeCreateRequest request, List<MultipartFile> images, Long memberId) {
         NoticeType type = parseNoticeType(request.type());
@@ -71,11 +73,14 @@ public class NoticeCommandService {
 
         validateAuthor(notice, memberId);
 
-        noticeImageRepository.findAllByNoticeId(noticeId)
-                .forEach(image -> s3Uploader.delete(image.getImageUrl()));
-        noticeImageRepository.deleteAllByNoticeId(noticeId);
+        List<String> imageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
+                .map(NoticeImage::getImageUrl)
+                .toList();
 
+        noticeImageRepository.deleteAllByNoticeId(noticeId);
         noticeRepository.delete(notice);
+
+        eventPublisher.publishEvent(new NoticeImageDeleteEvent(imageUrls));
     }
 
     private void validateAuthor(Notice notice, Long memberId) {
