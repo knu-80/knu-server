@@ -50,7 +50,6 @@ public class NoticeCommandService {
 
         validateAuthor(notice, memberId);
 
-        NoticeType type = request.type() != null ? parseNoticeType(request.type()) : null;
         LostFoundDetail lostFoundDetail = request.lostFoundDetail() != null
                 ? new LostFoundDetail(
                         request.lostFoundDetail().foundPlace(),
@@ -58,7 +57,7 @@ public class NoticeCommandService {
                         request.lostFoundDetail().description())
                 : null;
 
-        notice.updateNotice(request.title(), request.content(), type, lostFoundDetail);
+        notice.updateNotice(request.title(), request.content(), lostFoundDetail);
 
         List<String> imageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
                 .map(NoticeImage::getImageUrl)

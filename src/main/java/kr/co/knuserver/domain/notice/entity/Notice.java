@@ -47,15 +47,12 @@ public class Notice extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateNotice(String title, String content, NoticeType type, LostFoundDetail lostFoundDetail) {
+    public void updateNotice(String title, String content, LostFoundDetail lostFoundDetail) {
         if (title != null) {
             this.title = title;
         }
         if (content != null) {
             this.content = content;
-        }
-        if (type != null) {
-            this.type = type;
         }
         if (lostFoundDetail != null) {
             this.lostFoundDetail = lostFoundDetail;
