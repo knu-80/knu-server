@@ -62,7 +62,7 @@ public class PubTableService {
     @Transactional
     public PubTableResponseDto updatePubTable(PubTableRequestDto request, Long pubTableId) {
         PubTable pubTable = getPubTableById(pubTableId);
-        pubTable.updatePubTable(request);
+        pubTable.updatePubTable(request.tableNum(), request.pubBoothId());
         return PubTableResponseDto.fromEntity(pubTable);
     }
 
