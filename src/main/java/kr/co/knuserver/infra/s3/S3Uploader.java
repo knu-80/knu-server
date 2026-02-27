@@ -36,7 +36,7 @@ public class S3Uploader {
                             .key(key)
                             .contentType(file.getContentType())
                             .build(),
-                    RequestBody.fromBytes(file.getBytes())
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize())
             );
         } catch (IOException e) {
             throw new BusinessException(BusinessErrorCode.INTERNAL_SERVER_ERROR);
