@@ -4,6 +4,7 @@ import kr.co.knuserver.application.notice.NoticeQueryService;
 import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.notice.dto.response.NoticeDetailResponse;
 import kr.co.knuserver.presentation.notice.dto.response.NoticeListResponse;
+import kr.co.knuserver.presentation.notice.controller.docs.NoticeQueryControllerDocs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/notices")
 @RequiredArgsConstructor
-public class NoticeQueryController {
+public class NoticeQueryController implements NoticeQueryControllerDocs {
 
     private final NoticeQueryService noticeQueryService;
 
+    @Override
     @GetMapping
     public ResponseEntity<ApiResponse<List<NoticeListResponse>>> getNotices(
             @RequestParam(required = false) Long lastId,
@@ -26,6 +28,7 @@ public class NoticeQueryController {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
+    @Override
     @GetMapping("/{notice-id}")
     public ResponseEntity<ApiResponse<NoticeDetailResponse>> getNotice(
             @PathVariable("notice-id") Long noticeId

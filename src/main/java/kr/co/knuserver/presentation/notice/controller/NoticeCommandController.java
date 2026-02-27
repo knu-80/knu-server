@@ -7,6 +7,7 @@ import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.notice.dto.request.NoticeCreateRequest;
 import kr.co.knuserver.presentation.notice.dto.response.NoticeResponse;
 import kr.co.knuserver.presentation.notice.dto.request.NoticeUpdateRequest;
+import kr.co.knuserver.presentation.notice.controller.docs.NoticeCommandControllerDocs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,10 +20,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/notices")
 @RequiredArgsConstructor
-public class NoticeCommandController {
+public class NoticeCommandController implements NoticeCommandControllerDocs {
 
     private final NoticeCommandService noticeCommandService;
 
+    @Override
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<NoticeResponse>> createNotice(
             @MemberId Long memberId,
@@ -34,6 +36,7 @@ public class NoticeCommandController {
                 .body(ApiResponse.success(result));
     }
 
+    @Override
     @PatchMapping("/{notice-id}")
     public ResponseEntity<ApiResponse<NoticeResponse>> updateNotice(
             @MemberId Long memberId,
@@ -44,6 +47,7 @@ public class NoticeCommandController {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
+    @Override
     @DeleteMapping("/{notice-id}")
     public ResponseEntity<ApiResponse<?>> deleteNotice(
             @MemberId Long memberId,
