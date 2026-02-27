@@ -33,7 +33,7 @@ public class NoticeCommandService {
     private final ApplicationEventPublisher eventPublisher;
 
     public NoticeResponse createNotice(NoticeCreateRequest request, List<MultipartFile> images, Long memberId) {
-        NoticeType type = parseNoticeType(request.type());
+        NoticeType type = NoticeType.from(request.type());
         LostFoundDetail lostFoundDetail = toLostFoundDetail(type, request.lostFoundDetail());
 
         Notice notice = Notice.createNotice(request.title(), request.content(), type, memberId, lostFoundDetail);
@@ -85,14 +85,6 @@ public class NoticeCommandService {
     private void validateAuthor(Notice notice, Long memberId) {
         if (!notice.getMemberId().equals(memberId)) {
             throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
-        }
-    }
-
-    private NoticeType parseNoticeType(String type) {
-        try {
-            return NoticeType.valueOf(type);
-        } catch (IllegalArgumentException e) {
-            throw new BusinessException(BusinessErrorCode.INVALID_TYPE_VALUE);
         }
     }
 
