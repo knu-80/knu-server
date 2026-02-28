@@ -17,14 +17,14 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin")
+@RequestMapping("/api/v1/admin")
 public class AdminAuthController {
 
     private final AdminAuthService adminAuthService;
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody @Valid AdminLoginRequest request) {
-        TokenResponse response = adminAuthService.loginWithPin(request.pin());
+        TokenResponse response = adminAuthService.login(request.loginId(), request.password());
         return ResponseEntity.ok(response);
     }
 

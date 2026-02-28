@@ -7,7 +7,7 @@ import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.infra.jwt.JwtProvider;
 import kr.co.knuserver.presentation.auth.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,19 +18,17 @@ public class AdminAuthService {
 
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
 
-    @Value("${admin.pin}")
-    private String adminPin;
+    public TokenResponse login(String loginId, String password) {
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new BusinessException(BusinessErrorCode.INVALID_CREDENTIALS));
 
-    public TokenResponse loginWithPin(String pin) {
-        if (!adminPin.equals(pin)) {
-            throw new BusinessException(BusinessErrorCode.INVALID_PIN);
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new BusinessException(BusinessErrorCode.INVALID_CREDENTIALS);
         }
 
-        Member admin = memberRepository.findAdmin()
-                .orElseThrow(() -> new BusinessException(BusinessErrorCode.ADMIN_NOT_FOUND));
-
-        String accessToken = jwtProvider.createAccessToken(admin.getId());
+        String accessToken = jwtProvider.createAccessToken(member.getId());
         return TokenResponse.of(accessToken);
     }
 }

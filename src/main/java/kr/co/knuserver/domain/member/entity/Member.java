@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import kr.co.knuserver.global.base.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,13 +24,13 @@ import org.hibernate.annotations.SoftDeleteType;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "member")
 @SoftDelete(columnName = "deleted_at", strategy = SoftDeleteType.TIMESTAMP)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true,  nullable = false)
+    @Column(unique = true)
     private Long kakaoId;
 
     @Column(nullable = false)
@@ -39,11 +40,10 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
-    public static Member createMember(Long kakaoId, String nickname) {
-        return Member.builder()
-                .kakaoId(kakaoId)
-                .nickname(nickname)
-                .role(Role.USER)
-                .build();
-    }
+    @Column(name = "login_id", unique = true)
+    private String loginId;
+
+    @Column
+    private String password;
+
 }
