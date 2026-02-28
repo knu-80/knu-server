@@ -29,7 +29,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true,  nullable = false)
+    @Column(unique = true)
     private Long kakaoId;
 
     @Column(nullable = false)
@@ -39,11 +39,21 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
+    @Column(name = "login_id", unique = true)
+    private String loginId;
+
+    @Column
+    private String password;
+
     public static Member createMember(Long kakaoId, String nickname) {
         return Member.builder()
                 .kakaoId(kakaoId)
                 .nickname(nickname)
                 .role(Role.USER)
                 .build();
+    }
+
+    public void updatePassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }
