@@ -12,7 +12,7 @@
   <logger name="kr.co.knuserver" level="DEBUG"/>
   <logger name="org.springframework.web" level="DEBUG"/>
   <logger name="org.springframework.boot.autoconfigure" level="DEBUG"/>
-  <logger name="com.zaxxer.hikari.pool" level="DEBUG"/>
+  <logger name="com.zaxxer.hikari.pool" level="WARN"/>
   <logger name="org.hibernate.orm.jdbc" level="WARN"/>
   <logger name="org.hibernate.orm.core" level="WARN"/>
   <root level="INFO">
