@@ -52,9 +52,6 @@ jwt:
   secret: ${JWT_SECRET}
   access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600000}
 
-admin:
-  pin: ${ADMIN_PIN}
-
   cloud:
     aws:
       credentials:
