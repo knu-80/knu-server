@@ -1,7 +1,7 @@
 package kr.co.knuserver.presentation.pubTableSession;
 
 import jakarta.validation.Valid;
-import kr.co.knuserver.application.pubTableSession.PubTableSessionService;
+import kr.co.knuserver.application.pubTableSession.PubTableSessionCommandService;
 import kr.co.knuserver.presentation.pubTableSession.dto.PubTableSessionEndRequestDto;
 import kr.co.knuserver.presentation.pubTableSession.dto.PubTableSessionStartRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin/v1/pubTableSession")
 @RequiredArgsConstructor
-public class PubTableSessionController {
-    private final PubTableSessionService pubTableSessionService;
+public class PubTableSessionCommandController {
+    private final PubTableSessionCommandService pubTableSessionCommandService;
 
     @PostMapping("/start")
     public ResponseEntity<Void> startSession(@Valid @RequestBody PubTableSessionStartRequestDto request) {
-        pubTableSessionService.startSession(request);
+        pubTableSessionCommandService.startSession(request);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/end")
     public ResponseEntity<Void> endSession(@Valid @RequestBody PubTableSessionEndRequestDto request) {
-        pubTableSessionService.endSession(request);
+        pubTableSessionCommandService.endSession(request);
         return ResponseEntity.ok().build();
     }
 
