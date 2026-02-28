@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BoothService {
+public class BoothCommandService {
 
     private final BoothRepository boothRepository;
     private final BoothReader boothReader;
@@ -23,12 +23,6 @@ public class BoothService {
         Booth result = boothRepository.save(BoothRegisterRequestDto.toEntity(request));
 
         return BoothInfoResponseDto.fromEntity(result);
-    }
-
-    // 부스 조회
-    public BoothInfoResponseDto getBooth(Long boothId) {
-        Booth booth = boothReader.getBoothOrThrow(boothId);
-        return BoothInfoResponseDto.fromEntity(booth);
     }
 
     // 부스 수정
