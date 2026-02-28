@@ -2,7 +2,7 @@ package kr.co.knuserver.presentation.pubTable;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import kr.co.knuserver.application.pubTable.PubTableService;
+import kr.co.knuserver.application.pubTable.PubTableCommandService;
 import kr.co.knuserver.presentation.pubTable.dto.PubTableRequestDto;
 import kr.co.knuserver.presentation.pubTable.dto.PubTableResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,32 +19,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin/v1/pubTable")
 @RequiredArgsConstructor
-public class PubTableController {
+public class PubTableCommandController {
 
-    private final PubTableService pubTableService;
+    private final PubTableCommandService pubTableCommandService;
 
     @PostMapping
     public ResponseEntity<PubTableResponseDto> createPubTable(@Valid @RequestBody PubTableRequestDto pubTableRequestDto) {
-        PubTableResponseDto pubTableResponseDto = pubTableService.createPubTable(pubTableRequestDto);
+        PubTableResponseDto pubTableResponseDto = pubTableCommandService.createPubTable(pubTableRequestDto);
         return ResponseEntity.ok(pubTableResponseDto);
-    }
-
-    @GetMapping("/all/{pubBoothId}")
-    public ResponseEntity<List<PubTableResponseDto>> getAllPubTables(@PathVariable Long pubBoothId) {
-        List<PubTableResponseDto> pubTableResponseDtoList = pubTableService.getAllPubTables(pubBoothId);
-        return  ResponseEntity.ok(pubTableResponseDtoList);
     }
 
     @PutMapping("/{pubTableId}")
     public ResponseEntity<PubTableResponseDto> updatePubTable(
             @Valid @RequestBody PubTableRequestDto pubTableRequestDto, @PathVariable Long pubTableId) {
-        PubTableResponseDto pubTableResponseDto = pubTableService.updatePubTable(pubTableRequestDto, pubTableId);
+        PubTableResponseDto pubTableResponseDto = pubTableCommandService.updatePubTable(pubTableRequestDto, pubTableId);
         return ResponseEntity.ok(pubTableResponseDto);
     }
 
     @DeleteMapping("/{pubTableId}")
     public ResponseEntity<Void> deletePubTable(@PathVariable Long pubTableId) {
-        pubTableService.deletePubTable(pubTableId);
+        pubTableCommandService.deletePubTable(pubTableId);
         return ResponseEntity.ok().build();
     }
 }

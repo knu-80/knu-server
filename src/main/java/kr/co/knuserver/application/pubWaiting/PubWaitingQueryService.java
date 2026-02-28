@@ -6,12 +6,14 @@ import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class PubWaitingService {
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class PubWaitingQueryService {
+
     private final PubWaitingRepository pubWaitingRepository;
 
     public PubWaiting getPubWaitingById(Long pubWaitingId) {
