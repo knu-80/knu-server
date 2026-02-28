@@ -1,5 +1,6 @@
 package kr.co.knuserver.global.auth;
 
+import kr.co.knuserver.domain.member.repository.MemberRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.infra.jwt.JwtProvider;
@@ -19,6 +20,7 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtProvider jwtProvider;
+    private final MemberRepository memberRepository;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -40,6 +42,11 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
         }
 
         String token = header.substring(BEARER_PREFIX.length());
-        return jwtProvider.getMemberIdFromToken(token);
+        Long memberId = jwtProvider.getMemberIdFromToken(token);
+
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(BusinessErrorCode.UNAUTHORIZED_USER));
+
+        return memberId;
     }
 }

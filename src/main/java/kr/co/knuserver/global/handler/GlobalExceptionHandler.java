@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
         log.error("[{}] Business Exception: {}", e.getErrorCode().getStatus(), e.getMessage());
         final ApiResponse response = ApiResponse.error(e.getErrorCode());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(e.getErrorCode().getStatus()).body(response);
     }
 
     @ExceptionHandler(Exception.class)
