@@ -9,47 +9,13 @@
     </encoder>
   </appender>
 
-  <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>./logs/error-trace.log</file>
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%32X{traceId:-},%16X{spanId:-}|%-40.40logger{39}|%m%n%ex</pattern>
-      <charset>utf8</charset>
-    </encoder>
-
-    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-      <fileNamePattern>./logs/archive/error-trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-
-      <maxFileSize>10MB</maxFileSize>
-
-      <maxHistory>30</maxHistory>
-
-      <totalSizeCap>500MB</totalSizeCap>
-    </rollingPolicy>
-
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
-      <level>ERROR</level>
-      <onMatch>ACCEPT</onMatch>
-      <onMismatch>DENY</onMismatch>
-    </filter>
-  </appender>
-
-  <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="FILE_ERROR" />
-    <queueSize>512</queueSize>
-    <discardingThreshold>0</discardingThreshold>
-    <includeCallerData>false</includeCallerData> </appender>
-
   <logger name="kr.co.knuserver" level="DEBUG"/>
-
   <logger name="org.springframework.web" level="DEBUG"/>
   <logger name="org.springframework.boot.autoconfigure" level="DEBUG"/>
-  <logger name="org.springframework.web" level="DEBUG"/>
-  <logger name="org.hibernate.SQL" level="DEBUG"/>
-  <logger name="org.hibernate.orm.jdbc.bind" level="DEBUG"/>
-  <logger name="org.hibernate.engine.jdbc.env.spi.JdbcEnvironment" level="DEBUG"/>
-
+  <logger name="com.zaxxer.hikari.pool" level="DEBUG"/>
+  <logger name="org.hibernate.orm.jdbc" level="WARN"/>
+  <logger name="org.hibernate.orm.core" level="WARN"/>
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
-    <appender-ref ref="ASYNC_FILE"/>
 </root>
 </configuration>
