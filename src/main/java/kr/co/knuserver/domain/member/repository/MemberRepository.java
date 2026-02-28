@@ -10,4 +10,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE m.role = 'ADMIN'")
     Optional<Member> findAdmin();
+
+    Optional<Member> findByLoginId(String loginId);
 }
