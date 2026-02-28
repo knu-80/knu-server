@@ -23,7 +23,7 @@ public interface NoticeCommandControllerDocs {
             @ApiResponse(responseCode = "401", description = "인증 실패")
     })
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<NoticeResponse>> createNotice(
-            Long memberId,
+            @Parameter(hidden = true) Long memberId,
             @Parameter(description = "공지사항 등록 요청 데이터 (JSON)", required = true)
             NoticeCreateRequest request,
             @Parameter(description = "첨부 이미지 목록 (선택)")
@@ -39,7 +39,7 @@ public interface NoticeCommandControllerDocs {
             @ApiResponse(responseCode = "404", description = "공지 없음")
     })
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<NoticeResponse>> updateNotice(
-            Long memberId,
+            @Parameter(hidden = true) Long memberId,
             @Parameter(description = "공지사항 ID", required = true)
             Long noticeId,
             NoticeUpdateRequest request
@@ -53,7 +53,7 @@ public interface NoticeCommandControllerDocs {
             @ApiResponse(responseCode = "404", description = "공지 없음")
     })
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<?>> deleteNotice(
-            Long memberId,
+            @Parameter(hidden = true) Long memberId,
             @Parameter(description = "공지사항 ID", required = true)
             Long noticeId
     );
