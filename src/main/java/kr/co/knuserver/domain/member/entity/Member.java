@@ -46,15 +46,4 @@ public class Member extends BaseTimeEntity {
     @Column
     private String password;
 
-    public static Member createMember(Long kakaoId, String nickname) {
-        return Member.builder()
-                .kakaoId(kakaoId)
-                .nickname(nickname)
-                .role(Role.USER)
-                .build();
-    }
-
-    public void updatePassword(String encodedPassword) {
-        this.password = encodedPassword;
-    }
 }
