@@ -29,12 +29,6 @@ public class PubTableCommandController {
         return ResponseEntity.ok(pubTableResponseDto);
     }
 
-    @GetMapping("/all/{pubBoothId}")
-    public ResponseEntity<List<PubTableResponseDto>> getAllPubTables(@PathVariable Long pubBoothId) {
-        List<PubTableResponseDto> pubTableResponseDtoList = pubTableCommandService.getAllPubTables(pubBoothId);
-        return  ResponseEntity.ok(pubTableResponseDtoList);
-    }
-
     @PutMapping("/{pubTableId}")
     public ResponseEntity<PubTableResponseDto> updatePubTable(
             @Valid @RequestBody PubTableRequestDto pubTableRequestDto, @PathVariable Long pubTableId) {

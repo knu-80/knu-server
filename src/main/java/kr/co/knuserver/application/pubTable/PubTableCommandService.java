@@ -21,7 +21,6 @@ public class PubTableCommandService {
 
     private final PubTableRepository pubTableRepository;
     private final PubTableQueryService pubTableQueryService;
-    private final PubTableSessionQueryService pubTableSessionQueryService;
 
     public PubTableResponseDto createPubTable(PubTableRequestDto request) {
         pubTableQueryService.validateDuplicateTable(request.tableNum(), request.pubBoothId());
@@ -35,15 +34,6 @@ public class PubTableCommandService {
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(BusinessErrorCode.ALREADY_EXISTS);
         }
-    }
-
-    public List<PubTableResponseDto> getAllPubTables(Long pubBoothId) {
-        List<PubTable> pubTables = pubTableQueryService.getAllPubTablesByBoothId(pubBoothId);
-        return pubTables.stream().map((pubTable) -> {
-                    PubTableSession pubTableSession = pubTableSessionQueryService.getCurrentPubTableSession(pubTable.getId());
-                    return PubTableResponseDto.fromEntity(pubTable, pubTableSession);
-                }
-                ).toList();
     }
 
     public PubTableResponseDto updatePubTable(PubTableRequestDto request, Long pubTableId) {
