@@ -38,8 +38,20 @@ public class PubTableCommandService {
 
     public PubTableResponseDto updatePubTable(PubTableRequestDto request, Long pubTableId) {
         PubTable pubTable = pubTableQueryService.getPubTableById(pubTableId);
-        pubTable.updatePubTable(request.tableNum(), request.pubBoothId());
-        return PubTableResponseDto.fromEntity(pubTable);
+
+        boolean changed =
+                pubTable.getTableNum() != request.tableNum()
+                        || !pubTable.getPubBoothId().equals(request.pubBoothId());
+        if (changed) {
+            pubTableQueryService.validateDuplicateTable(request.tableNum(), request.pubBoothId());
+        }
+        try {
+            pubTable.updatePubTable(request.tableNum(), request.pubBoothId());
+            pubTableRepository.flush();
+            return PubTableResponseDto.fromEntity(pubTable);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException(BusinessErrorCode.ALREADY_EXISTS);
+        }
     }
 
     public void deletePubTable(Long pubTableId) {
