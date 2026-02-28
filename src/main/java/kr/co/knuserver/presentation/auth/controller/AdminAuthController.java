@@ -24,7 +24,7 @@ public class AdminAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody @Valid AdminLoginRequest request) {
-        TokenResponse response = adminAuthService.loginWithPin(request.pin());
+        TokenResponse response = adminAuthService.login(request.loginId(), request.password());
         return ResponseEntity.ok(response);
     }
 
