@@ -25,6 +25,7 @@ public enum BusinessErrorCode implements ErrorCode {
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "잘못된 입력값입니다."),
     INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C002", "잘못된 타입이 입력되었습니다."),
     MISSING_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C003", "필수 입력값이 누락되었습니다."),
+    NOT_IN_WAITING_PROCESS(HttpStatus.BAD_REQUEST, "C203", "웨이팅 등록 혹은 입장 호출 상태가 아닙니다."),
 
     /*
      * 401 UNAUTHORIZED: 인증되지 않은 사용자
@@ -46,6 +47,8 @@ public enum BusinessErrorCode implements ErrorCode {
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "C403", "해당 공지사항을 찾을 수 없습니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "C404", "해당 사용자를 찾을 수 없습니다."),
     PUB_TABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "C201", "존재하지 않는 테이블입니다."),
+    PUB_WAITING_NOT_FOUND(HttpStatus.NOT_FOUND, "C202", "존재하지 않는 웨이팅입니다."),
+    PUB_TABLE_SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "C204", "존재하지 않는 세션입니다."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
@@ -56,6 +59,7 @@ public enum BusinessErrorCode implements ErrorCode {
      * 409 CONFLICT: 리소스 충돌 (중복 데이터 등)
      */
     ALREADY_EXISTS(HttpStatus.CONFLICT, "C008", "이미 존재하는 데이터입니다."),
+    PUB_SESSION_ALREADY_EXISTS(HttpStatus.CONFLICT, "C205", "해당 테이블에 세션이 존재합니다."),
 
     /*
      * 500 INTERNAL_SERVER_ERROR: 내부 서버 오류
