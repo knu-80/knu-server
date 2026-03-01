@@ -20,11 +20,8 @@ public class NoticeQueryController implements NoticeQueryControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApiResponse<List<NoticeListResponse>>> getNotices(
-            @RequestParam(required = false) Long lastId,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        List<NoticeListResponse> result = noticeQueryService.getNotices(lastId, size);
+    public ResponseEntity<ApiResponse<List<NoticeListResponse>>> getNotices() {
+        List<NoticeListResponse> result = noticeQueryService.getNotices();
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
