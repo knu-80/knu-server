@@ -46,4 +46,10 @@ public class PubMenu extends BaseTimeEntity {
                 .pubBoothId(pubBoothId)
                 .build();
     }
+
+    public void update(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 }
