@@ -3,6 +3,7 @@ package kr.co.knuserver.presentation.notice.dto.response;
 import kr.co.knuserver.domain.member.entity.Member;
 import kr.co.knuserver.domain.notice.entity.LostFoundDetail;
 import kr.co.knuserver.domain.notice.entity.Notice;
+import kr.co.knuserver.domain.notice.entity.NoticeType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,18 +19,14 @@ public record NoticeDetailResponse(
         LostFoundDetailResponse lostFoundDetail,
         List<String> imageUrls
 ) {
-    public record LostFoundDetailResponse(String foundPlace, String keepingPlace, String description) {
+    public record LostFoundDetailResponse(String foundPlace, String foundItem) {
         public static LostFoundDetailResponse from(LostFoundDetail detail) {
-            return new LostFoundDetailResponse(
-                    detail.getFoundPlace(),
-                    detail.getKeepingPlace(),
-                    detail.getDescription()
-            );
+            return new LostFoundDetailResponse(detail.getFoundPlace(), detail.getFoundItem());
         }
     }
 
     public static NoticeDetailResponse fromEntity(Notice notice, Member author, List<String> imageUrls) {
-        LostFoundDetailResponse lostFoundDetailResponse = notice.getLostFoundDetail() != null
+        LostFoundDetailResponse lostFoundDetailResponse = notice.getType() == NoticeType.LOST_FOUND && notice.getLostFoundDetail() != null
                 ? LostFoundDetailResponse.from(notice.getLostFoundDetail())
                 : null;
 
