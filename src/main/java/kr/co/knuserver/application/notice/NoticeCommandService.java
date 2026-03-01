@@ -53,8 +53,7 @@ public class NoticeCommandService {
         LostFoundDetail lostFoundDetail = request.lostFoundDetail() != null
                 ? new LostFoundDetail(
                         request.lostFoundDetail().foundPlace(),
-                        request.lostFoundDetail().keepingPlace(),
-                        request.lostFoundDetail().description())
+                        request.lostFoundDetail().foundItem())
                 : null;
 
         notice.updateNotice(request.title(), request.content(), lostFoundDetail);
@@ -93,7 +92,7 @@ public class NoticeCommandService {
             if (request == null) {
                 throw new BusinessException(BusinessErrorCode.MISSING_INPUT_VALUE);
             }
-            return new LostFoundDetail(request.foundPlace(), request.keepingPlace(), request.description());
+            return new LostFoundDetail(request.foundPlace(), request.foundItem());
         }
         return null;
     }
