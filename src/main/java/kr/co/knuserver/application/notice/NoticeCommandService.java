@@ -92,6 +92,10 @@ public class NoticeCommandService {
             if (request == null) {
                 throw new BusinessException(BusinessErrorCode.MISSING_INPUT_VALUE);
             }
+            if (request.foundPlace() == null || request.foundPlace().isBlank()
+                    || request.foundItem() == null || request.foundItem().isBlank()) {
+                throw new BusinessException(BusinessErrorCode.MISSING_INPUT_VALUE);
+            }
             return new LostFoundDetail(request.foundPlace(), request.foundItem());
         }
         return null;
