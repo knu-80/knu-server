@@ -19,6 +19,7 @@ public class AdminAuthController implements AdminAuthControllerDocs {
 
     private final AdminAuthService adminAuthService;
 
+    @Override
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody @Valid AdminLoginRequest request) {
         TokenResponse response = adminAuthService.login(request.loginId(), request.password());
