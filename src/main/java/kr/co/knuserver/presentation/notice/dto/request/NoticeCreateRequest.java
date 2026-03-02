@@ -10,8 +10,7 @@ public record NoticeCreateRequest(
 ) {
     public record LostFoundDetailRequest(
             String foundPlace,
-            String keepingPlace,
-            String description
+            String foundItem
     ) {
     }
 }

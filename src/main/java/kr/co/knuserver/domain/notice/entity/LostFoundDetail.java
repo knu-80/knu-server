@@ -16,9 +16,6 @@ public class LostFoundDetail {
     @Column(name = "found_place")
     private String foundPlace;
 
-    @Column(name = "keeping_place")
-    private String keepingPlace;
-
-    @Column(name = "lost_description")
-    private String description;
+    @Column(name = "found_item")
+    private String foundItem;
 }

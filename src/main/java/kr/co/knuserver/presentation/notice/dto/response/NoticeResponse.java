@@ -14,9 +14,9 @@ public record NoticeResponse(
         List<String> imageUrls
 ) {
 
-    public record LostFoundDetailResponse(String foundPlace, String keepingPlace, String description) {
+    public record LostFoundDetailResponse(String foundPlace, String foundItem) {
         public static LostFoundDetailResponse from(LostFoundDetail detail) {
-            return new LostFoundDetailResponse(detail.getFoundPlace(), detail.getKeepingPlace(), detail.getDescription());
+            return new LostFoundDetailResponse(detail.getFoundPlace(), detail.getFoundItem());
         }
     }
 

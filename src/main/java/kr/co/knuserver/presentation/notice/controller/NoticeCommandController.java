@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/notices")
+@RequestMapping("/admin/v1/notices")
 @RequiredArgsConstructor
 public class NoticeCommandController implements NoticeCommandControllerDocs {
 

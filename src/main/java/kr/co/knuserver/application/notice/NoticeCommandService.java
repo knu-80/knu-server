@@ -50,12 +50,7 @@ public class NoticeCommandService {
 
         validateAuthor(notice, memberId);
 
-        LostFoundDetail lostFoundDetail = request.lostFoundDetail() != null
-                ? new LostFoundDetail(
-                        request.lostFoundDetail().foundPlace(),
-                        request.lostFoundDetail().keepingPlace(),
-                        request.lostFoundDetail().description())
-                : null;
+        LostFoundDetail lostFoundDetail = toLostFoundDetail(notice.getType(), request.lostFoundDetail());
 
         notice.updateNotice(request.title(), request.content(), lostFoundDetail);
 
@@ -88,12 +83,27 @@ public class NoticeCommandService {
         }
     }
 
+    private LostFoundDetail toLostFoundDetail(NoticeType type, NoticeUpdateRequest.LostFoundDetailRequest request) {
+        if (type == NoticeType.LOST_FOUND && request != null) {
+            if (request.foundPlace() == null || request.foundPlace().isBlank()
+                    || request.foundItem() == null || request.foundItem().isBlank()) {
+                throw new BusinessException(BusinessErrorCode.MISSING_INPUT_VALUE);
+            }
+            return new LostFoundDetail(request.foundPlace(), request.foundItem());
+        }
+        return null;
+    }
+
     private LostFoundDetail toLostFoundDetail(NoticeType type, NoticeCreateRequest.LostFoundDetailRequest request) {
         if (type == NoticeType.LOST_FOUND) {
             if (request == null) {
                 throw new BusinessException(BusinessErrorCode.MISSING_INPUT_VALUE);
             }
-            return new LostFoundDetail(request.foundPlace(), request.keepingPlace(), request.description());
+            if (request.foundPlace() == null || request.foundPlace().isBlank()
+                    || request.foundItem() == null || request.foundItem().isBlank()) {
+                throw new BusinessException(BusinessErrorCode.MISSING_INPUT_VALUE);
+            }
+            return new LostFoundDetail(request.foundPlace(), request.foundItem());
         }
         return null;
     }
