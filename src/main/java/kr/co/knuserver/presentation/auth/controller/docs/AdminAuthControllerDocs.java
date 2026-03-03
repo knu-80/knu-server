@@ -19,7 +19,7 @@ public interface AdminAuthControllerDocs {
             @ApiResponse(responseCode = "400", description = "입력값 유효성 검증 실패"),
             @ApiResponse(responseCode = "401", description = "아이디 또는 비밀번호가 올바르지 않음")
     })
-    ResponseEntity<TokenResponse> login(
+    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<TokenResponse>> login(
             @Valid @RequestBody AdminLoginRequest request
     );
 

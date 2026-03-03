@@ -46,4 +46,7 @@ public class Member extends BaseTimeEntity {
     @Column
     private String password;
 
+    @Column(name = "booth_id")
+    private Long boothId;
+
 }
