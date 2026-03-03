@@ -27,7 +27,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowedOrigins(
                         "http://localhost:3000",
-                        "http://localhost:8080"
+                        "http://localhost:8080",
+                        "http://localhost:5173",
+                        "https://knu-client.vercel.app"
                 )
                 .allowCredentials(true)
                 .maxAge(3600);
