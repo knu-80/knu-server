@@ -48,6 +48,9 @@ spring:
     restart:
       enabled: false
 
+cors:
+  allowed-origins: ${ALLOWED_ORIGINS}
+
 jwt:
   secret: ${JWT_SECRET}
   access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600000}
