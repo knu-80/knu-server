@@ -2,6 +2,7 @@ package kr.co.knuserver.global.config;
 
 import kr.co.knuserver.global.auth.MemberIdArgumentResolver;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -15,6 +16,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final MemberIdArgumentResolver memberIdArgumentResolver;
 
+    @Value("${cors.allowed-origins}")
+    private String[] allowedOrigins;
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(memberIdArgumentResolver);
@@ -25,12 +29,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
-                .allowedOrigins(
-                        "http://localhost:3000",
-                        "http://localhost:8080",
-                        "http://localhost:5173",
-                        "https://knu-client.vercel.app"
-                )
+                .allowedOrigins(allowedOrigins)
                 .allowCredentials(true)
                 .maxAge(3600);
     }
