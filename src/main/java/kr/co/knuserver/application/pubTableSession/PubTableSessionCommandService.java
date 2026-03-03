@@ -1,6 +1,7 @@
 package kr.co.knuserver.application.pubTableSession;
 
 import kr.co.knuserver.application.pubTable.PubTableQueryService;
+import kr.co.knuserver.application.pubWaiting.PubWaitingCommandService;
 import kr.co.knuserver.application.pubWaiting.PubWaitingQueryService;
 import kr.co.knuserver.domain.pubTable.entity.PubTable;
 import kr.co.knuserver.domain.pubTableSession.entity.PubTableSession;
@@ -42,7 +43,7 @@ public class PubTableSessionCommandService {
 
         PubTableSession pubTableSession = PubTableSession.createPubTableSession(pubWaiting.getGuestCount(), pubTable.getId());
         pubTableSessionRepository.save(pubTableSession);
-        pubWaiting.entered();
+        pubWaiting.enter();
     }
 
     public void endSession(PubTableSessionEndRequestDto request) {

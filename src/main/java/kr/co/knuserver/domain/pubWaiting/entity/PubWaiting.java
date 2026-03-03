@@ -52,10 +52,19 @@ public class PubWaiting extends BaseTimeEntity {
                 .guestCount(guestCount)
                 .memberId(memberId)
                 .pubBoothId(pubBoothId)
+                .status(PubWaitingStatus.WAITING)
                 .build();
     }
 
-    public void entered() {
+    public void call() {
+        this.status = PubWaitingStatus.CALL;
+    }
+
+    public void enter() {
         this.status = PubWaitingStatus.ENTERED;
+    }
+
+    public void cancel() {
+        this.status = PubWaitingStatus.CANCELLED;
     }
 }
