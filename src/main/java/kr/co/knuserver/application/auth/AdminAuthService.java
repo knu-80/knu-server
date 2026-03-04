@@ -5,6 +5,7 @@ import kr.co.knuserver.domain.member.repository.MemberRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.infra.jwt.JwtProvider;
+import kr.co.knuserver.presentation.auth.dto.AdminMeResponse;
 import kr.co.knuserver.presentation.auth.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,5 +31,11 @@ public class AdminAuthService {
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
         return TokenResponse.of(accessToken);
+    }
+
+    public AdminMeResponse getMe(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(BusinessErrorCode.MEMBER_NOT_FOUND));
+        return AdminMeResponse.from(member);
     }
 }

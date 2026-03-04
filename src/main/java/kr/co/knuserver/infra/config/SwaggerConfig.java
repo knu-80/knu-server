@@ -12,9 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
     private final List<Server> servers = List.of(
-            new Server().url("https://api.knu80th.kro.kr/api/v1")
-                    .description("로컬 환경"),
-            new Server().url("http://localhost:8080/api/v1")
+            new Server().url("https://api.knu80th.kro.kr")
                     .description("로컬 환경")
     );
 
