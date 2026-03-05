@@ -38,7 +38,7 @@ out/
 ### VS Code ###
 .vscode/
 
-.logs/
+logs/*
 
 ### HTTP test images ###
 src/main/resources/http/*.png
