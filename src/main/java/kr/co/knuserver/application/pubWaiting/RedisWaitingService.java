@@ -1,7 +1,6 @@
-package kr.co.knuserver.application.pubWaiting.redis;
+package kr.co.knuserver.application.pubWaiting;
 
 import java.util.List;
-import kr.co.knuserver.application.pubWaiting.PubWaitingServiceInterface;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;

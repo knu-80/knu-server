@@ -1,8 +1,6 @@
 package kr.co.knuserver.application.pubWaiting;
 
 import java.util.List;
-import kr.co.knuserver.application.pubWaiting.concurrent.ConcurrentMapWaitingService;
-import kr.co.knuserver.application.pubWaiting.redis.RedisWaitingService;
 import kr.co.knuserver.domain.pubWaiting.entity.PubWaiting;
 import kr.co.knuserver.domain.pubWaiting.repository.PubWaitingRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
@@ -17,8 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class PubWaitingQueryService {
-    private final ConcurrentMapWaitingService waitingService;
-//    private final RedisWaitingService waitingService;
+    private final RedisWaitingService waitingService;
     private final PubWaitingRepository pubWaitingRepository;
 
     public PubWaiting getPubWaitingById(Long pubWaitingId) {
