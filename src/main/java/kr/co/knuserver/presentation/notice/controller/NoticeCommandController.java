@@ -41,7 +41,7 @@ public class NoticeCommandController implements NoticeCommandControllerDocs {
     public ResponseEntity<ApiResponse<NoticeResponse>> updateNotice(
             @MemberId Long memberId,
             @PathVariable("notice-id") Long noticeId,
-            @RequestPart("data") NoticeUpdateRequest request,
+            @RequestPart("data") @Valid NoticeUpdateRequest request,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
         NoticeResponse result = noticeCommandService.updateNotice(noticeId, request, images, memberId);
