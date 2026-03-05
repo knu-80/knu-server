@@ -40,6 +40,9 @@ public class Booth extends BaseTimeEntity {
     @Column(name = "booth_number", nullable = false)
     private Integer boothNumber;
 
+    @Column(name = "user_booth_number", nullable = false)
+    private Integer userBoothNumber;
+
     @Column(nullable = false, length = 50)
     private String name;
 
@@ -59,15 +62,17 @@ public class Booth extends BaseTimeEntity {
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
-    public static Booth createBooth(Long memberId, Integer boothNumber, String name,
+    public static Booth createBooth(Long memberId, Integer boothNumber, Integer userBoothNumber,
+        String name,
         BoothDivision division, String description,
         String applyLink, String imageUrl) {
 
-        validate(memberId, boothNumber, name, division);
+        validate(memberId, boothNumber, userBoothNumber, name, division);
 
         return Booth.builder()
             .memberId(memberId)
             .boothNumber(boothNumber)
+            .userBoothNumber(userBoothNumber)
             .name(name)
             .division(division)
             .description(description)
@@ -77,8 +82,8 @@ public class Booth extends BaseTimeEntity {
             .build();
     }
 
-    private static void validate(Long memberId, Integer boothNumber, String name,
-        BoothDivision division) {
+    private static void validate(Long memberId, Integer boothNumber, Integer userBoothNumber,
+        String name, BoothDivision division) {
         if (memberId == null) {
             throw new BusinessException("부스 운영자 member ID는 필수입니다.",
                 BusinessErrorCode.MISSING_INPUT_VALUE);
@@ -95,6 +100,15 @@ public class Booth extends BaseTimeEntity {
 
         if (boothNumber <= 0) {
             throw new BusinessException("boothNumber는 양수만 입력 가능합니다.",
+                BusinessErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        if (userBoothNumber == null) {
+            throw new BusinessException("유저 부스 번호는 필수입니다.", BusinessErrorCode.MISSING_INPUT_VALUE);
+        }
+
+        if (userBoothNumber <= 0) {
+            throw new BusinessException("userBoothNumber는 양수만 입력 가능합니다.",
                 BusinessErrorCode.INVALID_INPUT_VALUE);
         }
 
@@ -124,6 +138,14 @@ public class Booth extends BaseTimeEntity {
         if (request.boothNumber() != null) {
             if (request.boothNumber() <= 0) {
                 throw new BusinessException("boothNumber는 양수만 입력 가능합니다.",
+                    BusinessErrorCode.INVALID_INPUT_VALUE);
+            }
+            this.boothNumber = request.boothNumber();
+        }
+
+        if (request.userBoothNumber() != null) {
+            if (request.userBoothNumber() <= 0) {
+                throw new BusinessException("userBoothNumber는 양수만 입력 가능합니다.",
                     BusinessErrorCode.INVALID_INPUT_VALUE);
             }
             this.boothNumber = request.boothNumber();

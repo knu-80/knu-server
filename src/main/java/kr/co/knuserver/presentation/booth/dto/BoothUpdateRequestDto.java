@@ -11,6 +11,9 @@ public record BoothUpdateRequestDto(
     @Positive(message = "boothNumber는 양수만 입력 가능합니다.")
     Integer boothNumber,
 
+    @Positive(message="userBoothNumber는 양수만 입력 가능합니다.")
+    Integer userBoothNumber,
+
     @Size(max = 50, message = "부스 이름은 최대 50자까지 입력 가능합니다.")
     String name,
     BoothDivision division,

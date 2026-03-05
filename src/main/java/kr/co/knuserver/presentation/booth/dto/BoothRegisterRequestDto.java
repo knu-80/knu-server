@@ -18,6 +18,10 @@ public record BoothRegisterRequestDto(
     @Positive(message = "boothNumber는 양수만 입력 가능합니다.")
     Integer boothNumber,
 
+    @NotNull(message = "유저 부스 번호는 필수입니다.")
+    @Positive(message = "userBoothNumber는 양수만 입력 가능합니다.")
+    Integer userBoothNumber,
+
     @NotBlank(message = "부스 이름은 필수입니다.")
     @Size(max = 50, message = "부스 이름은 최대 50자까지 입력 가능합니다.")
     String name,
@@ -33,6 +37,7 @@ public record BoothRegisterRequestDto(
         return Booth.createBooth(
             request.memberId(),
             request.boothNumber(),
+            request.userBoothNumber(),
             request.name(),
             request.division(),
             request.description(),
