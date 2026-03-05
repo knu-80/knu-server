@@ -44,7 +44,7 @@ public class NoticeCommandService {
         return NoticeResponse.fromEntity(saved, imageUrls);
     }
 
-    public NoticeResponse updateNotice(Long noticeId, NoticeUpdateRequest request, Long memberId) {
+    public NoticeResponse updateNotice(Long noticeId, NoticeUpdateRequest request, List<MultipartFile> images, Long memberId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
 
@@ -54,9 +54,17 @@ public class NoticeCommandService {
 
         notice.updateNotice(request.title(), request.content(), lostFoundDetail);
 
-        List<String> imageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
+        List<NoticeImage> noticeImages = noticeImageRepository.findAllByNoticeId(noticeId);
+
+        List<String> imageUrls = noticeImages.stream()
                 .map(NoticeImage::getImageUrl)
                 .toList();
+
+        eventPublisher.publishEvent(new NoticeImageDeleteEvent(imageUrls));
+
+        noticeImageRepository.deleteAllByNoticeIdInBatch(noticeId);
+
+        imageUrls = uploadImages(noticeId, images);
 
         return NoticeResponse.fromEntity(notice, imageUrls);
     }
@@ -71,7 +79,7 @@ public class NoticeCommandService {
                 .map(NoticeImage::getImageUrl)
                 .toList();
 
-        noticeImageRepository.deleteAllByNoticeId(noticeId);
+        noticeImageRepository.deleteAllByNoticeIdInBatch(noticeId);
         noticeRepository.delete(notice);
 
         eventPublisher.publishEvent(new NoticeImageDeleteEvent(imageUrls));
