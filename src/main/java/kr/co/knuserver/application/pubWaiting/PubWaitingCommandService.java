@@ -32,12 +32,20 @@ public class PubWaitingCommandService {
         waitingService.register(request.pubBoothId(), request.memberId(), pubWaitingId);
     }
 
-    public boolean cancel(PubWaitingCancelRequestDto request) {
-        PubWaiting pubWaiting = pubWaitingRepository.findById(request.pubWaitingId())
+    public boolean cancel(Long pubWaitingId) {
+        PubWaiting pubWaiting = pubWaitingRepository.findById(pubWaitingId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.PUB_WAITING_NOT_FOUND));
 
         pubWaiting.cancel();
-        return waitingService.cancel(request.pubBoothId(), request.memberId(), request.pubWaitingId());
+        return waitingService.cancel(pubWaiting.getPubBoothId(), pubWaiting.getMemberId(), pubWaitingId);
+    }
+
+    public void enter(Long pubWaitingId) {
+        PubWaiting pubWaiting = pubWaitingRepository.findById(pubWaitingId)
+                .orElseThrow(() -> new BusinessException(BusinessErrorCode.PUB_WAITING_NOT_FOUND));
+
+        pubWaiting.enter();
+        waitingService.cancel(pubWaiting.getPubBoothId(), pubWaiting.getMemberId(), pubWaitingId);
     }
 }
 

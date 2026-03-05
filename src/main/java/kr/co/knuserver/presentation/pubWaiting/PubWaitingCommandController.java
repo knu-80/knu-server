@@ -6,6 +6,7 @@ import kr.co.knuserver.presentation.pubWaiting.dto.PubWaitingRegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +24,9 @@ public class PubWaitingCommandController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/cancel")
-    public ResponseEntity<Void> cancel(@RequestBody PubWaitingCancelRequestDto request) {
-        boolean cancelled = pubWaitingCommandService.cancel(request);
+    @DeleteMapping("/cancel/{pubWaitingId}")
+    public ResponseEntity<Void> cancel(@PathVariable("pubWaitingId") Long pubWaitingId) {
+        boolean cancelled = pubWaitingCommandService.cancel(pubWaitingId);
         if (!cancelled) {
             return ResponseEntity.notFound().build();
         }

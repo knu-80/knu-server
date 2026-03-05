@@ -25,6 +25,7 @@ public class PubTableSessionCommandService {
     private final PubTableSessionQueryService pubTableSessionQueryService;
     private final PubTableQueryService pubTableQueryService;
     private final PubWaitingQueryService pubWaitingQueryService;
+    private final PubWaitingCommandService pubWaitingCommandService;
 
     public void startSession(PubTableSessionStartRequestDto request) {
         PubTable pubTable = pubTableQueryService.getPubTableById(request.pubTableId());
@@ -43,7 +44,7 @@ public class PubTableSessionCommandService {
 
         PubTableSession pubTableSession = PubTableSession.createPubTableSession(pubWaiting.getGuestCount(), pubTable.getId());
         pubTableSessionRepository.save(pubTableSession);
-        pubWaiting.enter();
+        pubWaitingCommandService.enter(request.pubWaitingId());
     }
 
     public void endSession(PubTableSessionEndRequestDto request) {
