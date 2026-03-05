@@ -1,9 +1,8 @@
-package kr.co.knuserver.application.pubWaiting.concurrent;
+package kr.co.knuserver.application.pubWaiting;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import kr.co.knuserver.application.pubWaiting.PubWaitingServiceInterface;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import org.springframework.stereotype.Service;

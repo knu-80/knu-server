@@ -47,15 +47,6 @@ spring:
   devtools:
     restart:
       enabled: false
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
-      lettuce:
-        pool:
-          max-active: 50
-          max-idle: 20
 
 jwt:
   secret: ${JWT_SECRET}

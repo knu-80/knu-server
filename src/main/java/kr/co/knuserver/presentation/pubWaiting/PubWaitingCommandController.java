@@ -1,7 +1,6 @@
 package kr.co.knuserver.presentation.pubWaiting;
 
 import kr.co.knuserver.application.pubWaiting.PubWaitingCommandService;
-import kr.co.knuserver.presentation.pubWaiting.dto.PubWaitingCancelRequestDto;
 import kr.co.knuserver.presentation.pubWaiting.dto.PubWaitingRegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

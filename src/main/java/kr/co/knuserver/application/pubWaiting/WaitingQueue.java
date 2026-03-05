@@ -1,4 +1,4 @@
-package kr.co.knuserver.application.pubWaiting.concurrent;
+package kr.co.knuserver.application.pubWaiting;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;

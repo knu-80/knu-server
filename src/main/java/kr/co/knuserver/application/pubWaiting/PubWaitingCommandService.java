@@ -1,13 +1,10 @@
 package kr.co.knuserver.application.pubWaiting;
 
 import kr.co.knuserver.application.pubBooth.PubBoothQueryService;
-import kr.co.knuserver.application.pubWaiting.concurrent.ConcurrentMapWaitingService;
-import kr.co.knuserver.application.pubWaiting.redis.RedisWaitingService;
 import kr.co.knuserver.domain.pubWaiting.entity.PubWaiting;
 import kr.co.knuserver.domain.pubWaiting.repository.PubWaitingRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
-import kr.co.knuserver.presentation.pubWaiting.dto.PubWaitingCancelRequestDto;
 import kr.co.knuserver.presentation.pubWaiting.dto.PubWaitingRegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PubWaitingCommandService {
     private final ConcurrentMapWaitingService waitingService;
-//    private final RedisWaitingService waitingService;
     private final PubWaitingRepository pubWaitingRepository;
     private final PubBoothQueryService pubBoothQueryService;
 
