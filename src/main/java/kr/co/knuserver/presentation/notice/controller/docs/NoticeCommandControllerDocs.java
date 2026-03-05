@@ -42,7 +42,10 @@ public interface NoticeCommandControllerDocs {
             @Parameter(hidden = true) Long memberId,
             @Parameter(description = "공지사항 ID", required = true)
             Long noticeId,
-            NoticeUpdateRequest request
+            @Parameter(description = "공지사항 수정 요청 데이터 (JSON), 수정할 필드만 담아서 요청", required = true)
+            NoticeUpdateRequest request,
+            @Parameter(description = "첨부 이미지 목록 (선택)")
+            List<MultipartFile> images
     );
 
     @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제합니다.")
