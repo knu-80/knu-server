@@ -30,10 +30,10 @@ public interface NoticeCommandControllerDocs {
             List<MultipartFile> images
     );
 
-    @Operation(summary = "공지사항 수정", description = "공지사항을 수정합니다. 변경할 필드만 전송하면 됩니다. GENERAL 타입에 lostFoundDetail을 포함하면 400이 반환됩니다.")
+    @Operation(summary = "공지사항 수정", description = "공지사항을 수정합니다. includeImage가 true이면 기존 이미지를 삭제하고 전송한 이미지로 교체합니다. false이면 이미지는 변경되지 않습니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공"),
-            @ApiResponse(responseCode = "400", description = "GENERAL 타입 공지에 lostFoundDetail 포함"),
+            @ApiResponse(responseCode = "400", description = "필수 필드(includeImage) 누락, GENERAL 타입 공지에 lostFoundDetail 포함, LOST_FOUND 타입 공지에 lostFoundDetail 누락 또는 필드 미입력"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "403", description = "작성자가 아님"),
             @ApiResponse(responseCode = "404", description = "공지 없음")
@@ -42,9 +42,9 @@ public interface NoticeCommandControllerDocs {
             @Parameter(hidden = true) Long memberId,
             @Parameter(description = "공지사항 ID", required = true)
             Long noticeId,
-            @Parameter(description = "공지사항 수정 요청 데이터 (JSON), 수정할 필드만 담아서 요청", required = true)
+            @Parameter(description = "공지사항 수정 요청 데이터 (JSON). includeImage는 필수입니다.", required = true)
             NoticeUpdateRequest request,
-            @Parameter(description = "첨부 이미지 목록 (선택)")
+            @Parameter(description = "첨부 이미지 목록 (includeImage가 true일 때 유효)")
             List<MultipartFile> images
     );
 
