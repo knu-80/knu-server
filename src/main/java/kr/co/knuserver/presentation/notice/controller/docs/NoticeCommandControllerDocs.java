@@ -30,10 +30,10 @@ public interface NoticeCommandControllerDocs {
             List<MultipartFile> images
     );
 
-    @Operation(summary = "공지사항 수정", description = "공지사항의 텍스트 필드(제목, 내용 등)를 수정합니다. 이미지 변경은 이미지 수정 API를 사용하세요.")
+    @Operation(summary = "공지사항 수정", description = "공지사항의 텍스트 필드(제목, 내용 등)를 수정합니다. 이미지 변경은 이미지 수정 API를 사용하세요. GENERAL 타입에 lostFoundDetail을 포함하면 무시됩니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공"),
-            @ApiResponse(responseCode = "400", description = "GENERAL 타입 공지에 lostFoundDetail 포함, LOST_FOUND 타입 공지에 lostFoundDetail 누락 또는 필드 미입력"),
+            @ApiResponse(responseCode = "400", description = "LOST_FOUND 타입 공지에 lostFoundDetail 누락 또는 필드 미입력"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "403", description = "작성자가 아님"),
             @ApiResponse(responseCode = "404", description = "공지 없음")
