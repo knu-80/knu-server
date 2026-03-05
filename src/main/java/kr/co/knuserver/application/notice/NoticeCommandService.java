@@ -44,7 +44,7 @@ public class NoticeCommandService {
         return NoticeResponse.fromEntity(saved, imageUrls);
     }
 
-    public NoticeResponse updateNotice(Long noticeId, NoticeUpdateRequest request, List<MultipartFile> images, Long memberId) {
+    public NoticeResponse updateNotice(Long noticeId, NoticeUpdateRequest request, Long memberId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
 
@@ -54,19 +54,27 @@ public class NoticeCommandService {
 
         notice.updateNotice(request.title(), request.content(), lostFoundDetail);
 
-        List<String> imageUrls;
-        if (request.includeImage()) {
-            List<String> oldImageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
-                    .map(NoticeImage::getImageUrl)
-                    .toList();
-            eventPublisher.publishEvent(new NoticeImageDeleteEvent(oldImageUrls));
-            noticeImageRepository.deleteAllByNoticeIdInBatch(noticeId);
-            imageUrls = uploadImages(noticeId, images);
-        } else {
-            imageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
-                    .map(NoticeImage::getImageUrl)
-                    .toList();
-        }
+        List<String> imageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
+                .map(NoticeImage::getImageUrl)
+                .toList();
+
+        return NoticeResponse.fromEntity(notice, imageUrls);
+    }
+
+    public NoticeResponse updateNoticeImages(Long noticeId, List<MultipartFile> images, Long memberId) {
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
+
+        validateAuthor(notice, memberId);
+
+        List<String> oldImageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
+                .map(NoticeImage::getImageUrl)
+                .toList();
+
+        eventPublisher.publishEvent(new NoticeImageDeleteEvent(oldImageUrls));
+        noticeImageRepository.deleteAllByNoticeIdInBatch(noticeId);
+
+        List<String> imageUrls = uploadImages(noticeId, images);
 
         return NoticeResponse.fromEntity(notice, imageUrls);
     }

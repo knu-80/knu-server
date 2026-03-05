@@ -37,14 +37,24 @@ public class NoticeCommandController implements NoticeCommandControllerDocs {
     }
 
     @Override
-    @PatchMapping(value = "/{notice-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping("/{notice-id}")
     public ResponseEntity<ApiResponse<NoticeResponse>> updateNotice(
             @MemberId Long memberId,
             @PathVariable("notice-id") Long noticeId,
-            @RequestPart("data") @Valid NoticeUpdateRequest request,
+            @RequestBody @Valid NoticeUpdateRequest request
+    ) {
+        NoticeResponse result = noticeCommandService.updateNotice(noticeId, request, memberId);
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @Override
+    @PostMapping(value = "/{notice-id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<NoticeResponse>> updateNoticeImages(
+            @MemberId Long memberId,
+            @PathVariable("notice-id") Long noticeId,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
-        NoticeResponse result = noticeCommandService.updateNotice(noticeId, request, images, memberId);
+        NoticeResponse result = noticeCommandService.updateNoticeImages(noticeId, images, memberId);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
