@@ -42,7 +42,10 @@ public class ApiResponse<T> {
     }
 
     public static ApiResponse<?> error(MethodArgumentNotValidException error) {
-        return new ApiResponse<>(ResultType.FAIL, null, null, error.getMessage());
+        String message = error.getBindingResult().getFieldErrors().stream()
+                .map(e -> e.getField() + ": " + e.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        return new ApiResponse<>(ResultType.FAIL, null, null, message);
     }
 
     public static ApiResponse<?> error(Exception error) {
