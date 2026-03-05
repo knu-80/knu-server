@@ -54,17 +54,19 @@ public class NoticeCommandService {
 
         notice.updateNotice(request.title(), request.content(), lostFoundDetail);
 
-        List<NoticeImage> noticeImages = noticeImageRepository.findAllByNoticeId(noticeId);
-
-        List<String> imageUrls = noticeImages.stream()
-                .map(NoticeImage::getImageUrl)
-                .toList();
-
-        eventPublisher.publishEvent(new NoticeImageDeleteEvent(imageUrls));
-
-        noticeImageRepository.deleteAllByNoticeIdInBatch(noticeId);
-
-        imageUrls = uploadImages(noticeId, images);
+        List<String> imageUrls;
+        if (request.includeImage()) {
+            List<String> oldImageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
+                    .map(NoticeImage::getImageUrl)
+                    .toList();
+            eventPublisher.publishEvent(new NoticeImageDeleteEvent(oldImageUrls));
+            noticeImageRepository.deleteAllByNoticeIdInBatch(noticeId);
+            imageUrls = uploadImages(noticeId, images);
+        } else {
+            imageUrls = noticeImageRepository.findAllByNoticeId(noticeId).stream()
+                    .map(NoticeImage::getImageUrl)
+                    .toList();
+        }
 
         return NoticeResponse.fromEntity(notice, imageUrls);
     }
