@@ -29,6 +29,7 @@ public record BoothRegisterRequestDto(
     @NotNull(message = "부스 분과는 필수입니다.")
     BoothDivision division,
     String description,
+    String keywords,
     String applyLink,
     String imageUrl
 ) {
@@ -41,6 +42,7 @@ public record BoothRegisterRequestDto(
             request.name(),
             request.division(),
             request.description(),
+            request.keywords(),
             request.applyLink(),
             request.imageUrl()
         );

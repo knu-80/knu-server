@@ -12,6 +12,7 @@ public record BoothInfoResponseDto(
     String name,
     BoothDivision division,
     String description,
+    String keywords,
     String applyLink,
     String imageUrl,
     boolean isActive
@@ -24,6 +25,7 @@ public record BoothInfoResponseDto(
             .name(entity.getName())
             .division(entity.getDivision())
             .description(entity.getDescription())
+            .keywords(entity.getKeywords())
             .applyLink(entity.getApplyLink())
             .imageUrl(entity.getImageUrl())
             .isActive(entity.getIsActive())

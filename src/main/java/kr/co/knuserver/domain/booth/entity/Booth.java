@@ -53,6 +53,9 @@ public class Booth extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
+    private String keywords;
+
     @Column(name = "apply_link", columnDefinition = "TEXT")
     private String applyLink;
 
@@ -64,7 +67,7 @@ public class Booth extends BaseTimeEntity {
 
     public static Booth createBooth(Long memberId, Integer boothNumber, Integer userBoothNumber,
         String name,
-        BoothDivision division, String description,
+        BoothDivision division, String description, String keywords,
         String applyLink, String imageUrl) {
 
         validate(memberId, boothNumber, userBoothNumber, name, division);
@@ -76,6 +79,7 @@ public class Booth extends BaseTimeEntity {
             .name(name)
             .division(division)
             .description(description)
+            .keywords(keywords)
             .applyLink(applyLink)
             .isActive(true)
             .imageUrl(imageUrl)
@@ -169,6 +173,10 @@ public class Booth extends BaseTimeEntity {
 
         if (request.description() != null) {
             this.description = request.description();
+        }
+
+        if(request.keywords()!=null){
+            this.keywords=request.keywords();
         }
 
         if (request.applyLink() != null) {
