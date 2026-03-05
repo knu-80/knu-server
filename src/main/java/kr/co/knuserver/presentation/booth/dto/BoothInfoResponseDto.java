@@ -8,7 +8,6 @@ import lombok.Builder;
 public record BoothInfoResponseDto(
     Long id,
     Integer boothNumber,
-    Integer userBoothNumber,
     String name,
     BoothDivision division,
     String description,
@@ -21,7 +20,6 @@ public record BoothInfoResponseDto(
         return BoothInfoResponseDto.builder()
             .id(entity.getId())
             .boothNumber(entity.getBoothNumber())
-            .userBoothNumber(entity.getUserBoothNumber())
             .name(entity.getName())
             .division(entity.getDivision())
             .description(entity.getDescription())
