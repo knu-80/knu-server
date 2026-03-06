@@ -59,13 +59,10 @@ public class Booth extends BaseTimeEntity {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @Column(name = "image_url", columnDefinition = "TEXT")
-    private String imageUrl;
-
     public static Booth createBooth(Long memberId, Integer boothNumber,
         String name,
         BoothDivision division, String description, String keywords,
-        String applyLink, String imageUrl) {
+        String applyLink) {
 
         validate(memberId, boothNumber, name, division);
 
@@ -78,7 +75,6 @@ public class Booth extends BaseTimeEntity {
             .keywords(keywords)
             .applyLink(applyLink)
             .isActive(true)
-            .imageUrl(imageUrl)
             .build();
     }
 
@@ -160,10 +156,6 @@ public class Booth extends BaseTimeEntity {
 
         if (request.applyLink() != null) {
             this.applyLink = request.applyLink();
-        }
-
-        if (request.imageUrl() != null) {
-            this.imageUrl = request.imageUrl();
         }
 
         if (request.isActive() != null) {

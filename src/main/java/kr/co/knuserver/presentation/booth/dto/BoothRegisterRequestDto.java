@@ -26,8 +26,7 @@ public record BoothRegisterRequestDto(
     BoothDivision division,
     String description,
     String keywords,
-    String applyLink,
-    String imageUrl
+    String applyLink
 ) {
 
     public static Booth toEntity(BoothRegisterRequestDto request) {
@@ -38,8 +37,7 @@ public record BoothRegisterRequestDto(
             request.division(),
             request.description(),
             request.keywords(),
-            request.applyLink(),
-            request.imageUrl()
+            request.applyLink()
         );
     }
 }
