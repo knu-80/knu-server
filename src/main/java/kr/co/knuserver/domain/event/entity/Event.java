@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import kr.co.knuserver.global.base.BaseTimeEntity;
+import kr.co.knuserver.global.exception.BusinessErrorCode;
+import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.presentation.event.dto.EventRequestDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -54,6 +56,7 @@ public class Event extends BaseTimeEntity {
     public static Event createEvent(String title, String description, EventType type,
         String imageUrl, LocalDateTime startAt, LocalDateTime endAt) {
 
+        validate(title, description, type);
         DurationVO eventDuration = DurationVO.createDurationVO(startAt, endAt);
 
         return Event.builder()
@@ -68,10 +71,14 @@ public class Event extends BaseTimeEntity {
 
     public void updateEvent(EventRequestDto request){
         if(request.title() !=null){
-            this.title=request.title();
+            if(!request.title().isBlank()) {
+                this.title = request.title();
+            }
         }
         if (request.description() != null) {
-            this.description = request.description();
+            if(!request.description().isBlank()) {
+                this.description = request.description();
+            }
         }
         if (request.eventType() != null) {
             this.eventType = request.eventType();
@@ -94,6 +101,21 @@ public class Event extends BaseTimeEntity {
 
         if (request.isActive() != null) {
             this.isActive = request.isActive();
+        }
+    }
+
+    private static void validate(String title, String description, EventType type){
+
+        if(title==null || title.isBlank()){
+            throw new BusinessException("이벤트명은 필수입니다.", BusinessErrorCode.MISSING_INPUT_VALUE);
+        }
+
+        if(description==null || description.isBlank()){
+            throw new BusinessException("이벤트 설명은 필수입니다.", BusinessErrorCode.MISSING_INPUT_VALUE);
+        }
+
+        if(type==null){
+            throw new BusinessException("이벤트 타입은 필수입니다.", BusinessErrorCode.MISSING_INPUT_VALUE);
         }
     }
 }
