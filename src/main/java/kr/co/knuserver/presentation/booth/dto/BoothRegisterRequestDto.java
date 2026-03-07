@@ -25,8 +25,8 @@ public record BoothRegisterRequestDto(
     @NotNull(message = "부스 분과는 필수입니다.")
     BoothDivision division,
     String description,
-    String applyLink,
-    String imageUrl
+    String keywords,
+    String applyLink
 ) {
 
     public static Booth toEntity(BoothRegisterRequestDto request) {
@@ -36,8 +36,8 @@ public record BoothRegisterRequestDto(
             request.name(),
             request.division(),
             request.description(),
-            request.applyLink(),
-            request.imageUrl()
+            request.keywords(),
+            request.applyLink()
         );
     }
 }

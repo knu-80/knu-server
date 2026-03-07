@@ -15,8 +15,8 @@ public record BoothUpdateRequestDto(
     String name,
     BoothDivision division,
     String description,
+    String keywords,
     String applyLink,
-    String imageUrl,
     Boolean isActive
 ) {
 

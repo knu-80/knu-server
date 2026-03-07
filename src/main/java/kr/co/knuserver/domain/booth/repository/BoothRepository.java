@@ -12,6 +12,13 @@ public interface BoothRepository extends JpaRepository<Booth, Long> {
     List<Booth> findByIsActiveTrue();
 
     // 주어진 키워드가 부스명 or 부스 설명에 들어간 부스들을 조회
-    @Query("SELECT b FROM Booth b WHERE b.isActive = true AND (b.name LIKE %:keyword% OR b.description LIKE %:keyword%)")
+    @Query("SELECT b FROM Booth b " +
+        "WHERE b.isActive = true AND (b.name LIKE %:keyword% OR b.keywords LIKE %:keyword%) " +
+        "ORDER BY " +
+        "  CASE " +
+        "    WHEN b.name LIKE %:keyword% THEN 1 " + // 1순위: 이름에 키워드가 포함
+        "    ELSE 2 " +                             // 2순위: b.keyword에 해당 키워드가 포함
+        "  END ASC, " +
+        "  b.boothNumber ASC")                      // 동일 순위일 경우 부스번호순 정렬
     List<Booth> searchByKeyword(@Param("keyword") String keyword);
 }

@@ -50,18 +50,19 @@ public class Booth extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
+    private String keywords;
+
     @Column(name = "apply_link", columnDefinition = "TEXT")
     private String applyLink;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @Column(name = "image_url", columnDefinition = "TEXT")
-    private String imageUrl;
-
-    public static Booth createBooth(Long memberId, Integer boothNumber, String name,
-        BoothDivision division, String description,
-        String applyLink, String imageUrl) {
+    public static Booth createBooth(Long memberId, Integer boothNumber,
+        String name,
+        BoothDivision division, String description, String keywords,
+        String applyLink) {
 
         validate(memberId, boothNumber, name, division);
 
@@ -71,14 +72,14 @@ public class Booth extends BaseTimeEntity {
             .name(name)
             .division(division)
             .description(description)
+            .keywords(keywords)
             .applyLink(applyLink)
             .isActive(true)
-            .imageUrl(imageUrl)
             .build();
     }
 
-    private static void validate(Long memberId, Integer boothNumber, String name,
-        BoothDivision division) {
+    private static void validate(Long memberId, Integer boothNumber,
+        String name, BoothDivision division) {
         if (memberId == null) {
             throw new BusinessException("부스 운영자 member ID는 필수입니다.",
                 BusinessErrorCode.MISSING_INPUT_VALUE);
@@ -149,12 +150,12 @@ public class Booth extends BaseTimeEntity {
             this.description = request.description();
         }
 
-        if (request.applyLink() != null) {
-            this.applyLink = request.applyLink();
+        if (request.keywords() != null) {
+            this.keywords = request.keywords();
         }
 
-        if (request.imageUrl() != null) {
-            this.imageUrl = request.imageUrl();
+        if (request.applyLink() != null) {
+            this.applyLink = request.applyLink();
         }
 
         if (request.isActive() != null) {
