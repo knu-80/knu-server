@@ -45,7 +45,7 @@ public class AdminEventApiController implements AdminEventApiControllerDocs {
     @PatchMapping("/{event-id}")
     public ResponseEntity<ApiResponse<EventResponseDto>> updateEvent(
         @PathVariable(name = "event-id") Long eventId,
-        @Valid @RequestBody EventRequestDto request
+        @RequestBody EventRequestDto request
     ) {
         EventResponseDto result = eventCommandService.updateEvent(eventId, request);
         return ResponseEntity.ok(ApiResponse.success(result));
