@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Booth API", description = "가두모집 부스 관련 API(일반 사용자/부스 운영자/총동연)")
 public interface BoothApiControllerDocs {
@@ -35,9 +37,7 @@ public interface BoothApiControllerDocs {
         @RequestParam(name = "keyword", required = false) String keyword
     );
 
-
-    @Operation(summary = "가두모집 부스 수정", description = "특정 가두모집 부스의 정보를 수정합니다.(부스 운영자/총동연 검증 로직을 "
-        + "추가할 예정입니다.)")
+    @Operation(summary = "가두모집 부스 정보 수정", description = "부스의 텍스트 필드(이름, 번호, 설명 등)를 수정합니다. 이미지 변경은 이미지 수정 API를 사용하세요.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "부스 수정 성공"),
         @ApiResponse(responseCode = "404", description = "부스를 찾을 수 없음"),
@@ -45,4 +45,14 @@ public interface BoothApiControllerDocs {
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> updateBooth(
         @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId,
         @Valid @RequestBody BoothUpdateRequestDto request);
+
+    @Operation(summary = "가두모집 부스 이미지 수정", description = "부스의 이미지를 교체합니다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "이미지 수정 성공"),
+        @ApiResponse(responseCode = "404", description = "부스 없음")
+    })
+    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> updateBoothImages(
+        @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId,
+        @Parameter(description = "교체할 이미지 목록 (선택, 미전송 시 이미지 전체 삭제)")
+        @RequestPart(value = "images", required = false) List<MultipartFile> images);
 }

@@ -1,8 +1,10 @@
 package kr.co.knuserver.global.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Map;
 import javax.lang.model.type.ErrorType;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Getter
@@ -42,7 +46,17 @@ public class ApiResponse<T> {
     }
 
     public static ApiResponse<?> error(MethodArgumentNotValidException error) {
-        return new ApiResponse<>(ResultType.FAIL, null, null, error.getMessage());
+        String message = Stream.concat(
+                        error.getBindingResult().getFieldErrors().stream()
+                                .map(e -> e.getField() + ": " + e.getDefaultMessage()),
+                        error.getBindingResult().getGlobalErrors().stream()
+                                .map(e -> e.getObjectName() + ": " + e.getDefaultMessage())
+                )
+                .collect(Collectors.joining(", "));
+        if (message.isBlank()) {
+            message = "요청 값이 유효하지 않습니다.";
+        }
+        return new ApiResponse<>(ResultType.FAIL, null, null, message);
     }
 
     public static ApiResponse<?> error(Exception error) {

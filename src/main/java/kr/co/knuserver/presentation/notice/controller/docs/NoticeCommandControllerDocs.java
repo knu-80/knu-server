@@ -30,10 +30,10 @@ public interface NoticeCommandControllerDocs {
             List<MultipartFile> images
     );
 
-    @Operation(summary = "공지사항 수정", description = "공지사항을 수정합니다. 변경할 필드만 전송하면 됩니다. GENERAL 타입에 lostFoundDetail을 포함하면 400이 반환됩니다.")
+    @Operation(summary = "공지사항 수정", description = "공지사항의 텍스트 필드(제목, 내용 등)를 수정합니다. 이미지 변경은 이미지 수정 API를 사용하세요. GENERAL 타입에 lostFoundDetail을 포함하면 무시됩니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공"),
-            @ApiResponse(responseCode = "400", description = "GENERAL 타입 공지에 lostFoundDetail 포함"),
+            @ApiResponse(responseCode = "400", description = "LOST_FOUND 타입 공지에 lostFoundDetail 누락 또는 필드 미입력"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "403", description = "작성자가 아님"),
             @ApiResponse(responseCode = "404", description = "공지 없음")
@@ -42,7 +42,23 @@ public interface NoticeCommandControllerDocs {
             @Parameter(hidden = true) Long memberId,
             @Parameter(description = "공지사항 ID", required = true)
             Long noticeId,
+            @Parameter(description = "공지사항 수정 요청 데이터 (JSON)", required = true)
             NoticeUpdateRequest request
+    );
+
+    @Operation(summary = "공지사항 이미지 수정", description = "공지사항의 이미지를 교체합니다. 기존 이미지는 전부 삭제되고 전송한 이미지로 교체됩니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "이미지 수정 성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "403", description = "작성자가 아님"),
+            @ApiResponse(responseCode = "404", description = "공지 없음")
+    })
+    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<NoticeResponse>> updateNoticeImages(
+            @Parameter(hidden = true) Long memberId,
+            @Parameter(description = "공지사항 ID", required = true)
+            Long noticeId,
+            @Parameter(description = "교체할 이미지 목록 (선택, 미전송 시 이미지 전체 삭제)")
+            List<MultipartFile> images
     );
 
     @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제합니다.")
