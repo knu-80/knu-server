@@ -1,4 +1,4 @@
-package kr.co.knuserver.domain.pubTableSession.entity;
+package kr.co.knuserver.domain.pubOrder.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
