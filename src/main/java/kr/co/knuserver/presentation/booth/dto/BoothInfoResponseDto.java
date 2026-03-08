@@ -14,6 +14,7 @@ public record BoothInfoResponseDto(
     String description,
     String keywords,
     String applyLink,
+    String contact,
     List<String> imageUrls,
     boolean isActive
 ) {
@@ -26,6 +27,7 @@ public record BoothInfoResponseDto(
             .description(entity.getDescription())
             .keywords(entity.getKeywords())
             .applyLink(entity.getApplyLink())
+            .contact(entity.getContact())
             .imageUrls(imageUrls == null ? List.of() : List.copyOf(imageUrls))
             .isActive(entity.getIsActive())
             .build();
