@@ -2,46 +2,54 @@ package kr.co.knuserver.application.event;
 
 import kr.co.knuserver.domain.event.entity.Event;
 import kr.co.knuserver.domain.event.repository.EventRepository;
+import kr.co.knuserver.global.exception.BusinessErrorCode;
+import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.infra.s3.S3Uploader;
 import kr.co.knuserver.presentation.event.dto.EventRequestDto;
 import kr.co.knuserver.presentation.event.dto.EventResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class EventCommandService {
 
     private static final String S3_FOLDER = "event";
 
     private final EventRepository eventRepository;
-    private final EventReader eventReader;
     private final S3Uploader s3Uploader;
 
-    // 이벤트 생성
+    @Transactional
     public EventResponseDto registerEvent(EventRequestDto request, MultipartFile image) {
         String imageUrl = uploadImage(image);
-        Event result = eventRepository.save(EventRequestDto.toEntity(request, imageUrl));
-
-        return EventResponseDto.fromEntity(result);
+        try {
+            Event result = eventRepository.saveAndFlush(EventRequestDto.toEntity(request, imageUrl));
+            return EventResponseDto.fromEntity(result);
+        } catch (DataIntegrityViolationException e) {
+            if (imageUrl != null) {
+                s3Uploader.delete(imageUrl);
+            }
+            throw new BusinessException(BusinessErrorCode.ALREADY_EXISTS);
+        }
     }
 
-    // 이벤트 수정
+    @Transactional
     public EventResponseDto updateEvent(Long eventId, EventRequestDto request) {
-        Event event = eventReader.getEventOrThrow(eventId);
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new BusinessException(BusinessErrorCode.EVENT_NOT_FOUND));
         event.updateEvent(request, null);
 
         return EventResponseDto.fromEntity(event);
     }
 
-    // 이벤트 이미지 수정 (교체)
+    @Transactional
     public EventResponseDto updateEventImage(Long eventId, MultipartFile image) {
-        Event event = eventReader.getEventOrThrow(eventId);
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new BusinessException(BusinessErrorCode.EVENT_NOT_FOUND));
 
-        // 기존 S3 이미지 삭제
         if (event.getImageUrl() != null) {
             s3Uploader.delete(event.getImageUrl());
         }
@@ -52,11 +60,11 @@ public class EventCommandService {
         return EventResponseDto.fromEntity(event);
     }
 
-    // 이벤트 삭제
+    @Transactional
     public void deleteEvent(Long eventId) {
-        Event event = eventReader.getEventOrThrow(eventId);
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new BusinessException(BusinessErrorCode.EVENT_NOT_FOUND));
 
-        // S3 이미지 삭제
         if (event.getImageUrl() != null) {
             s3Uploader.delete(event.getImageUrl());
         }
