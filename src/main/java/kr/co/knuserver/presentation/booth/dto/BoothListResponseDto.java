@@ -7,6 +7,7 @@ import lombok.Builder;
 @Builder
 public record BoothListResponseDto(
     Long id,
+    Integer boothNumber,
     String name,
     BoothDivision division,
     String description,
@@ -16,6 +17,7 @@ public record BoothListResponseDto(
     public static BoothListResponseDto fromEntity(Booth entity, String firstImageUrl) {
         return BoothListResponseDto.builder()
             .id(entity.getId())
+            .boothNumber(entity.getBoothNumber())
             .name(entity.getName())
             .division(entity.getDivision())
             .description(entity.getDescription())
