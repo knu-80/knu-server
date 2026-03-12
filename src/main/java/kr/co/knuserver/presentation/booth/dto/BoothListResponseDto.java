@@ -1,13 +1,14 @@
 package kr.co.knuserver.presentation.booth.dto;
 
 import kr.co.knuserver.domain.booth.entity.Booth;
+import kr.co.knuserver.domain.booth.entity.BoothDivision;
 import lombok.Builder;
 
 @Builder
 public record BoothListResponseDto(
     Long id,
     String name,
-    String divisionName,
+    BoothDivision division,
     String description,
     String imageUrl,
     String applyLink
@@ -16,7 +17,7 @@ public record BoothListResponseDto(
         return BoothListResponseDto.builder()
             .id(entity.getId())
             .name(entity.getName())
-            .divisionName(entity.getDivision().getDescription())
+            .division(entity.getDivision())
             .description(entity.getDescription())
             .imageUrl(firstImageUrl)
             .applyLink(entity.getApplyLink())
