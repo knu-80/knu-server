@@ -4,10 +4,10 @@ server:
     session:
       timeout: 1800
   tomcat:
-    max-connections: 20000
+    max-connections: ${TOMCAT_MAX_CONNECTIONS:20000}
     threads:
-      max: 600
-      min-spare: 100
+      max: ${TOMCAT_MAX_THREADS:600}
+      min-spare: ${TOMCAT_MIN_SPARE_THREADS:100}
 
 spring:
   datasource:
@@ -16,13 +16,13 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      maximum-pool-size: 20
-      minimum-idle: 10
-      connection-timeout: 3000
-      validation-timeout: 3000
-      idle-timeout: 300000
-      max-lifetime: 600000
-      keepalive-time: 60000
+      maximum-pool-size: ${HIKARI_MAX_POOL_SIZE:10}
+      minimum-idle: ${HIKARI_MIN_IDLE:10}
+      connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:3000}
+      validation-timeout: ${HIKARI_VALIDATION_TIMEOUT:3000}
+      idle-timeout: ${HIKARI_IDLE_TIMEOUT:300000}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:600000}
+      keepalive-time: ${HIKARI_KEEPALIVE_TIME:60000}
   servlet:
     multipart:
       max-file-size: ${MAX_FILE_SIZE}
@@ -43,7 +43,13 @@ spring:
     baseline-on-migrate: false
   threads:
     virtual:
-      enabled: true
+      enabled: ${VIRTUAL_THREADS_ENABLED:false}
+  task:
+    execution:
+      pool:
+        core-size: ${ASYNC_CORE_POOL_SIZE:15}
+        max-size: ${ASYNC_MAX_POOL_SIZE:15}
+        queue-capacity: ${ASYNC_QUEUE_CAPACITY:100}
   devtools:
     restart:
       enabled: false

@@ -21,6 +21,18 @@ public class EventApiController implements EventApiControllerDocs {
 
     private final EventQueryService eventQueryService;
 
+    // 이벤트 단건 조회
+    @Override
+    @GetMapping("/{event-id}")
+    public ResponseEntity<ApiResponse<EventResponseDto>> getEvent(
+        @PathVariable(name = "event-id") Long eventId
+    ) {
+        EventResponseDto result = eventQueryService.getEvent(eventId);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse.success(result));
+    }
+
+    // 이벤트 리스트 조회
     @Override
     @GetMapping("/list/{event-type}")
     public ResponseEntity<ApiResponse<List<EventResponseDto>>> getEventList(

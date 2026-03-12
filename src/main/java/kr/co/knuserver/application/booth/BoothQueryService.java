@@ -9,6 +9,8 @@ import kr.co.knuserver.domain.booth.entity.BoothImage;
 import kr.co.knuserver.domain.booth.repository.BoothImageRepository;
 import kr.co.knuserver.domain.booth.repository.BoothRepository;
 import kr.co.knuserver.global.dto.CursorPaginationResponse;
+import kr.co.knuserver.global.exception.BusinessErrorCode;
+import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -23,19 +25,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class BoothQueryService {
 
-    private final BoothReader boothReader;
     private final BoothRepository boothRepository;
     private final BoothImageRepository boothImageRepository;
 
-    // 부스 조회
     public BoothInfoResponseDto getBooth(Long boothId) {
-        Booth booth = boothReader.getBoothOrThrow(boothId);
+        Booth booth = boothRepository.findById(boothId)
+                .orElseThrow(() -> new BusinessException(BusinessErrorCode.BOOTH_NOT_FOUND));
         List<String> imageUrls = boothImageRepository.findAllByBoothId(boothId).stream()
             .map(BoothImage::getImageUrl)
             .toList();
         return BoothInfoResponseDto.fromEntity(booth, imageUrls);
     }
-
+  
     // 주어진 키워드를 바탕으로 부스 리스트 조회 (커서 기반 페이지네이션)
     public CursorPaginationResponse<BoothListResponseDto> searchBoothsByKeyword(String keyword, Long lastId, int size) {
         Pageable pageable = PageRequest.of(0, size + 1);
@@ -44,12 +45,10 @@ public class BoothQueryService {
         if (lastId == null) {
             lastId = 0L;
         }
-
-        // 키워드가 없거나 공백이면 전체 목록 반환
+  
         if (keyword == null || keyword.isBlank()) {
             booths = boothRepository.findByIsActiveTrueAndIdGreaterThanOrderByIdAsc(lastId, pageable);
         }
-        // 키워드가 있으면 해당 키워드로 검색
         else {
             booths = boothRepository.searchByKeywordWithCursor(keyword, lastId, pageable);
         }
@@ -76,6 +75,5 @@ public class BoothQueryService {
 
         return CursorPaginationResponse.of(items, nextCursor, hasNext);
     }
-
 }
 
