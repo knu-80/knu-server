@@ -8,10 +8,14 @@ import kr.co.knuserver.domain.booth.entity.Booth;
 import kr.co.knuserver.domain.booth.entity.BoothImage;
 import kr.co.knuserver.domain.booth.repository.BoothImageRepository;
 import kr.co.knuserver.domain.booth.repository.BoothRepository;
+import kr.co.knuserver.global.dto.CursorPaginationResponse;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
+import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,26 +36,44 @@ public class BoothQueryService {
             .toList();
         return BoothInfoResponseDto.fromEntity(booth, imageUrls);
     }
-
-    public List<BoothInfoResponseDto> searchBoothsByKeyword(String keyword) {
+  
+    // 주어진 키워드를 바탕으로 부스 리스트 조회 (커서 기반 페이지네이션)
+    public CursorPaginationResponse<BoothListResponseDto> searchBoothsByKeyword(String keyword, Long lastId, int size) {
+        Pageable pageable = PageRequest.of(0, size + 1);
         List<Booth> booths;
 
+        if (lastId == null) {
+            lastId = 0L;
+        }
+  
         if (keyword == null || keyword.isBlank()) {
-            booths = boothRepository.findByIsActiveTrue();
+            booths = boothRepository.findByIsActiveTrueAndIdGreaterThanOrderByIdAsc(lastId, pageable);
         }
         else {
-            booths = boothRepository.searchByKeyword(keyword);
+            booths = boothRepository.searchByKeywordWithCursor(keyword, lastId, pageable);
         }
 
-        List<Long> boothIds = booths.stream().map(Booth::getId).toList();
+        boolean hasNext = booths.size() > size;
+        List<Booth> pagedBooths = hasNext ? booths.subList(0, size) : booths;
+
+        List<Long> boothIds = pagedBooths.stream().map(Booth::getId).toList();
         Map<Long, List<String>> imageUrlsMap = boothImageRepository.findAllByBoothIdIn(boothIds).stream()
             .collect(Collectors.groupingBy(
                 BoothImage::getBoothId,
                 Collectors.mapping(BoothImage::getImageUrl, Collectors.toList())
             ));
 
-        return booths.stream()
-            .map(booth -> BoothInfoResponseDto.fromEntity(booth, imageUrlsMap.getOrDefault(booth.getId(), Collections.emptyList())))
+        List<BoothListResponseDto> items = pagedBooths.stream()
+            .map(booth -> {
+                List<String> urls = imageUrlsMap.getOrDefault(booth.getId(), Collections.emptyList());
+                String firstImageUrl = urls.isEmpty() ? null : urls.get(0);
+                return BoothListResponseDto.fromEntity(booth, firstImageUrl);
+            })
             .toList();
+
+        Long nextCursor = items.isEmpty() ? null : items.get(items.size() - 1).id();
+
+        return CursorPaginationResponse.of(items, nextCursor, hasNext);
     }
 }
+

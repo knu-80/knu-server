@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import kr.co.knuserver.global.dto.CursorPaginationResponse;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
+import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,14 +29,18 @@ public interface BoothApiControllerDocs {
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> getBooth(
         @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId);
 
-    @Operation(summary = "키워드 단위 가두모집 부스 리스트 조회", description = "주어진 키워드가 부스명 or 부스 설명에 들어간 모든 "
-        + "부스를 조회합니다.")
+    @Operation(summary = "키워드 단위 가두모집 부스 리스트 조회", description = "주어진 키워드가 부스명 or 부스 설명에 들어간 "
+        + "부스를 커서 기반 페이지네이션으로 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "부스 조회 성공")
     })
-    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<List<BoothInfoResponseDto>>> searchBooths(
+    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<CursorPaginationResponse<BoothListResponseDto>>> searchBooths(
         @Parameter(description = "검색할 키워드 (입력하지 않으면 전체 조회)")
-        @RequestParam(name = "keyword", required = false) String keyword
+        @RequestParam(name = "keyword", required = false) String keyword,
+        @Parameter(description = "마지막으로 조회된 부스 ID (첫 요청 시 null)")
+        @RequestParam(name = "lastId", required = false) Long lastId,
+        @Parameter(description = "페이지 크기 (기본값: 10)")
+        @RequestParam(name = "size", required = false, defaultValue = "10") int size
     );
 
     @Operation(summary = "가두모집 부스 정보 수정", description = "부스의 텍스트 필드(이름, 번호, 설명 등)를 수정합니다. 이미지 변경은 이미지 수정 API를 사용하세요.")
