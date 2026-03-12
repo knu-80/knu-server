@@ -48,12 +48,24 @@ public class BoothApiController implements BoothApiControllerDocs {
     // 키워드 단위 가두모집 부스 리스트 조회
     @Override
     @GetMapping("/list")
+    public ResponseEntity<ApiResponse<List<BoothInfoResponseDto>>> searchBooths(
+        @RequestParam(name = "keyword", required = false) String keyword
+    ) {
+        List<BoothInfoResponseDto> result = boothQueryService.searchBoothsByKeyword1(keyword);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse.success(result));
+    }
+
+    // 키워드 단위 가두모집 부스 리스트 조회
+    @Override
+    @GetMapping("/list/pagination")
     public ResponseEntity<ApiResponse<CursorPaginationResponse<BoothListResponseDto>>> searchBooths(
         @RequestParam(name = "keyword", required = false) String keyword,
         @RequestParam(name = "lastId", required = false) Long lastId,
         @RequestParam(name = "size", required = false, defaultValue = "10") int size
     ) {
-        CursorPaginationResponse<BoothListResponseDto> result = boothQueryService.searchBoothsByKeyword(keyword, lastId, size);
+        CursorPaginationResponse<BoothListResponseDto> result = boothQueryService.searchBoothsByKeyword2(keyword, lastId, size);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.success(result));

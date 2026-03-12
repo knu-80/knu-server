@@ -29,7 +29,17 @@ public interface BoothApiControllerDocs {
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> getBooth(
         @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId);
 
-    @Operation(summary = "키워드 단위 가두모집 부스 리스트 조회", description = "주어진 키워드가 부스명 or 부스 설명에 들어간 "
+    @Operation(summary = "키워드 단위 가두모집 부스 리스트 조회(페이지네이션 X)", description = "주어진 키워드가 부스명 or 부스 설명에 들어간 모든 "
+        + "부스를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "부스 조회 성공")
+    })
+    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<List<BoothInfoResponseDto>>> searchBooths(
+        @Parameter(description = "검색할 키워드 (입력하지 않으면 전체 조회)")
+        @RequestParam(name = "keyword", required = false) String keyword
+    );
+
+    @Operation(summary = "키워드 단위 가두모집 부스 리스트 조회(페이지네이션 적용)", description = "주어진 키워드가 부스명 or 부스 설명에 들어간 "
         + "부스를 커서 기반 페이지네이션으로 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "부스 조회 성공")
