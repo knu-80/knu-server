@@ -54,6 +54,7 @@ public enum BusinessErrorCode implements ErrorCode {
      */
     PUB_BOOTH_NOT_FOUND(HttpStatus.NOT_FOUND, "C301", "해당 주점을 찾을 수 없습니다."),
     PUB_MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "C302", "해당 주점 메뉴를 찾을 수 없습니다."),
+    PUB_ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "C206", "해당 주문을 찾을 수 없습니다."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
