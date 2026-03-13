@@ -2,6 +2,9 @@ package kr.co.knuserver.application.pubOrder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import kr.co.knuserver.application.pubMenu.PubMenuQueryService;
 import kr.co.knuserver.application.pubTableSession.PubTableSessionQueryService;
 import kr.co.knuserver.domain.pubMenu.entity.PubMenu;
@@ -34,8 +37,16 @@ public class PubOrderCommandService {
             pubOrders.add(PubOrder.createPubOrder(pubTableSession.getId(), orderMenus.menuId(), orderMenus.quantity()));
         }
         List<PubOrder> savedPubOrders = pubOrderRepository.saveAll(pubOrders);
+
+        List<Long> menuIds = savedPubOrders.stream()
+                .map(PubOrder::getPubMenuId)
+                .distinct()
+                .toList();
+        Map<Long, PubMenu> pubMenuMap = pubMenuQueryService.findAllPubMenuByIds(menuIds).stream()
+                .collect(Collectors.toMap(PubMenu::getId, Function.identity()));
+
         List<OrderedMenus> orderedMenus = savedPubOrders.stream().map((pubOrder -> {
-            PubMenu pubMenu = pubMenuQueryService.findPubMenuById(pubOrder.getPubMenuId());
+            PubMenu pubMenu = pubMenuMap.get(pubOrder.getPubMenuId());
             return OrderedMenus.fromEntity(pubOrder, pubMenu);
         })).toList();
         return PubOrderResponseDto.fromEntity(request.pubTableSessionId(), orderedMenus);
