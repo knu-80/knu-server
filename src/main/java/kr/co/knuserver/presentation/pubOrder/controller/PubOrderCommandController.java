@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PubOrderCommandController {
 
-    private PubOrderCommandService pubOrderCommandService;
+    private final PubOrderCommandService pubOrderCommandService;
 
     @PostMapping
     public ResponseEntity<PubOrderResponseDto> createOrder(@Valid @RequestBody PubOrderRequestDto request) {
