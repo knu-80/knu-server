@@ -11,6 +11,8 @@ import kr.co.knuserver.domain.pubMenu.entity.PubMenu;
 import kr.co.knuserver.domain.pubOrder.entity.PubOrder;
 import kr.co.knuserver.domain.pubOrder.repository.PubOrderRepository;
 import kr.co.knuserver.domain.pubTableSession.entity.PubTableSession;
+import kr.co.knuserver.global.exception.BusinessErrorCode;
+import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.presentation.pubOrder.dto.OrderMenus;
 import kr.co.knuserver.presentation.pubOrder.dto.OrderedMenus;
 import kr.co.knuserver.presentation.pubOrder.dto.PubOrderRequestDto;
@@ -32,18 +34,24 @@ public class PubOrderCommandService {
     public PubOrderResponseDto createOrder(PubOrderRequestDto request) {
         PubTableSession pubTableSession = pubTableSessionQueryService.getPubTableSessionById(request.pubTableSessionId());
 
+        List<Long> menuIds = request.orderMenus().stream()
+                .map(OrderMenus::menuId)
+                .distinct()
+                .toList();
+        List<PubMenu> foundMenus = pubMenuQueryService.findAllPubMenuByIds(menuIds);
+
+        if (foundMenus.size() != menuIds.size()) {
+            throw new BusinessException(BusinessErrorCode.PUB_MENU_NOT_FOUND);
+        }
+
+        Map<Long, PubMenu> pubMenuMap = foundMenus.stream()
+                .collect(Collectors.toMap(PubMenu::getId, Function.identity()));
+
         List<PubOrder> pubOrders = new ArrayList<>();
         for (OrderMenus orderMenus : request.orderMenus()) {
             pubOrders.add(PubOrder.createPubOrder(pubTableSession.getId(), orderMenus.menuId(), orderMenus.quantity()));
         }
         List<PubOrder> savedPubOrders = pubOrderRepository.saveAll(pubOrders);
-
-        List<Long> menuIds = savedPubOrders.stream()
-                .map(PubOrder::getPubMenuId)
-                .distinct()
-                .toList();
-        Map<Long, PubMenu> pubMenuMap = pubMenuQueryService.findAllPubMenuByIds(menuIds).stream()
-                .collect(Collectors.toMap(PubMenu::getId, Function.identity()));
 
         List<OrderedMenus> orderedMenus = savedPubOrders.stream().map((pubOrder -> {
             PubMenu pubMenu = pubMenuMap.get(pubOrder.getPubMenuId());
