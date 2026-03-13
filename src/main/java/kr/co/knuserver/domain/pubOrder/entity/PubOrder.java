@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import kr.co.knuserver.global.exception.BusinessErrorCode;
+import kr.co.knuserver.global.exception.BusinessException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +36,10 @@ public class PubOrder {
     private Integer quantity;
 
     public static PubOrder createPubOrder(Long pubSessionId, Long pubMenuId, Integer quantity) {
+        if (quantity == null || quantity <= 0) {
+            throw new BusinessException("주문 수량은 양수만 입력 가능합니다.", BusinessErrorCode.INVALID_INPUT_VALUE);
+        }
+
         return PubOrder.builder()
                 .pubTableSessionId(pubSessionId)
                 .pubMenuId(pubMenuId)
