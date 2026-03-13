@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class PubOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pub_table_id")
+    @Column(name = "pub_order_id")
     private Long id;
 
     @Column(name = "pub_table_session_id", nullable = false)
@@ -30,10 +30,14 @@ public class PubOrder {
     @Column(name = "pub_menu_id", nullable = false)
     private Long pubMenuId;
 
-    public static PubOrder createPubOrder(Long pubSessionId, Long pubMenuId) {
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    public static PubOrder createPubOrder(Long pubSessionId, Long pubMenuId, Integer quantity) {
         return PubOrder.builder()
                 .pubTableSessionId(pubSessionId)
                 .pubMenuId(pubMenuId)
+                .quantity(quantity)
                 .build();
     }
 }
