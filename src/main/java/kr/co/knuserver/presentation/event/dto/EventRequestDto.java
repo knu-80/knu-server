@@ -13,10 +13,11 @@ public record EventRequestDto(
     @NotBlank(message = "이벤트 설명은 공백일 수 없습니다.")
     String description,
 
+    @NotBlank(message = "이벤트 장소는 공백일 수 없습니다.")
+    String location,
+
     @NotNull(message = "이벤트 타입은 필수값입니다.")
     EventType eventType,
-
-    String imageUrl,
 
     @NotNull(message = "이벤트 시작 시각은 필수값입니다.")
     LocalDateTime startAt,
@@ -27,12 +28,13 @@ public record EventRequestDto(
     @NotNull(message = "이벤트 활성화 여부는 필수값입니다.")
     Boolean isActive
 ) {
-    public static Event toEntity(EventRequestDto request) {
+    public static Event toEntity(EventRequestDto request, String imageUrl) {
         return Event.createEvent(
             request.title(),
             request.description(),
+            request.location(),
+            imageUrl,
             request.eventType(),
-            request.imageUrl(),
             request.startAt(),
             request.endAt()
         );

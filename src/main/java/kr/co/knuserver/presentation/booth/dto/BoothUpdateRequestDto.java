@@ -17,6 +17,7 @@ public record BoothUpdateRequestDto(
     String description,
     String keywords,
     String applyLink,
+    String contact,
     Boolean isActive
 ) {
 

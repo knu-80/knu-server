@@ -40,12 +40,15 @@ public class Event extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private EventType eventType;
+    @Column(columnDefinition = "TEXT")
+    private String location;
 
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EventType eventType;
 
     @Embedded
     private DurationVO eventDuration;
@@ -53,23 +56,24 @@ public class Event extends BaseTimeEntity {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    public static Event createEvent(String title, String description, EventType type,
-        String imageUrl, LocalDateTime startAt, LocalDateTime endAt) {
+    public static Event createEvent(String title, String description, String location, String imageUrl, EventType type,
+        LocalDateTime startAt, LocalDateTime endAt) {
 
-        validate(title, description, type);
+        validate(title, description, location, type);
         DurationVO eventDuration = DurationVO.createDurationVO(startAt, endAt);
 
         return Event.builder()
             .title(title)
             .description(description)
-            .eventType(type)
+            .location(location)
             .imageUrl(imageUrl)
+            .eventType(type)
             .eventDuration(eventDuration)
             .isActive(true)
             .build();
     }
 
-    public void updateEvent(EventRequestDto request){
+    public void updateEvent(EventRequestDto request, String imageUrl){
         if(request.title() !=null){
             if(!request.title().isBlank()) {
                 this.title = request.title();
@@ -80,11 +84,14 @@ public class Event extends BaseTimeEntity {
                 this.description = request.description();
             }
         }
+        if (request.location() != null) {
+            this.location = request.location();
+        }
+        if (imageUrl != null) {
+            this.imageUrl = imageUrl;
+        }
         if (request.eventType() != null) {
             this.eventType = request.eventType();
-        }
-        if (request.imageUrl() != null) {
-            this.imageUrl = request.imageUrl();
         }
 
         LocalDateTime updatedStartAt = this.eventDuration.getStartAt();
@@ -104,7 +111,7 @@ public class Event extends BaseTimeEntity {
         }
     }
 
-    private static void validate(String title, String description, EventType type){
+    private static void validate(String title, String description, String location, EventType type){
 
         if(title==null || title.isBlank()){
             throw new BusinessException("이벤트명은 필수입니다.", BusinessErrorCode.MISSING_INPUT_VALUE);
@@ -112,6 +119,10 @@ public class Event extends BaseTimeEntity {
 
         if(description==null || description.isBlank()){
             throw new BusinessException("이벤트 설명은 필수입니다.", BusinessErrorCode.MISSING_INPUT_VALUE);
+        }
+
+        if(location==null || location.isBlank()){
+            throw new BusinessException("이벤트 장소는 필수입니다.", BusinessErrorCode.MISSING_INPUT_VALUE);
         }
 
         if(type==null){

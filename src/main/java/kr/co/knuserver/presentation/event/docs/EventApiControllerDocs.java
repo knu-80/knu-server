@@ -14,6 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Tag(name = "Event API", description = "일반 사용자용 이벤트 관련 API")
 public interface EventApiControllerDocs {
 
+    @Operation(summary = "이벤트 단건 조회", description = "특정 이벤트를 상세 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이벤트 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "이벤트를 찾을 수 없음")
+    })
+    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<EventResponseDto>> getEvent(
+            @Parameter(description = "이벤트 ID", required = true) @PathVariable(name = "event-id") Long eventId);
+
     @Operation(summary = "이벤트 리스트 조회", description = "특정 타입(가두모집/동아리 축제)의 이벤트 리스트를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이벤트 리스트 조회 성공")

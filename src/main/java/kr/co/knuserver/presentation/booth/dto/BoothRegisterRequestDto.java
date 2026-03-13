@@ -26,7 +26,10 @@ public record BoothRegisterRequestDto(
     BoothDivision division,
     String description,
     String keywords,
-    String applyLink
+    String applyLink,
+
+    @NotBlank(message = "문의사항 정보는 필수입니다.")
+    String contact
 ) {
 
     public static Booth toEntity(BoothRegisterRequestDto request) {
@@ -37,7 +40,8 @@ public record BoothRegisterRequestDto(
             request.division(),
             request.description(),
             request.keywords(),
-            request.applyLink()
+            request.applyLink(),
+            request.contact()
         );
     }
 }

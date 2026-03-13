@@ -5,9 +5,11 @@ import jakarta.validation.Valid;
 import java.util.List;
 import kr.co.knuserver.application.booth.BoothCommandService;
 import kr.co.knuserver.application.booth.BoothQueryService;
+import kr.co.knuserver.global.dto.CursorPaginationResponse;
 import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.booth.docs.BoothApiControllerDocs;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
+import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,7 +51,21 @@ public class BoothApiController implements BoothApiControllerDocs {
     public ResponseEntity<ApiResponse<List<BoothInfoResponseDto>>> searchBooths(
         @RequestParam(name = "keyword", required = false) String keyword
     ) {
-        List<BoothInfoResponseDto> result = boothQueryService.searchBoothsByKeyword(keyword);
+        List<BoothInfoResponseDto> result = boothQueryService.searchBoothsByKeyword1(keyword);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse.success(result));
+    }
+
+    // 키워드 단위 가두모집 부스 리스트 조회
+    @Override
+    @GetMapping("/list/pagination")
+    public ResponseEntity<ApiResponse<CursorPaginationResponse<BoothListResponseDto>>> searchBooths(
+        @RequestParam(name = "keyword", required = false) String keyword,
+        @RequestParam(name = "lastId", required = false) Long lastId,
+        @RequestParam(name = "size", required = false, defaultValue = "10") int size
+    ) {
+        CursorPaginationResponse<BoothListResponseDto> result = boothQueryService.searchBoothsByKeyword2(keyword, lastId, size);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.success(result));
