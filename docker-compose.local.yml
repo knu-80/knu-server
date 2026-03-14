@@ -19,6 +19,15 @@ services:
     networks:
       - knu-80-bridge
 
+  redis:
+    image: redis:7.2-alpine
+    container_name: knu-80-redis
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    restart: always
+    networks:
+      - knu-80-bridge
+
 volumes:
   knu-80-database:
 
