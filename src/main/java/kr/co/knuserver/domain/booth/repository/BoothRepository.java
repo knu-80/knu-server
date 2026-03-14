@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface BoothRepository extends JpaRepository<Booth, Long> {
 
+    Integer countByIsActiveTrue();
+
     List<Booth> findByIsActiveTrueAndIdGreaterThanOrderByIdAsc(Long lastId, Pageable pageable);
 
     List<Booth> findByIsActiveTrue();
