@@ -9,4 +9,6 @@ import java.util.List;
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     List<Notice> findAll(Sort sort);
+
+    List<Notice> findTop3ByOrderByIdDesc();
 }

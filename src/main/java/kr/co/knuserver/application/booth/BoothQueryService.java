@@ -13,6 +13,7 @@ import kr.co.knuserver.domain.booth.repository.BoothRepository;
 import kr.co.knuserver.global.dto.CursorPaginationResponse;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
+import kr.co.knuserver.presentation.booth.dto.BoothCountResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothRankingResponseDto;
@@ -32,6 +33,11 @@ public class BoothQueryService {
     private final BoothRepository boothRepository;
     private final BoothImageRepository boothImageRepository;
     private final BoothLikeService boothLikeService;
+
+    public BoothCountResponseDto getBoothCount() {
+        Integer count = boothRepository.countByIsActiveTrue();
+        return BoothCountResponseDto.from(count);
+    }
 
     public BoothInfoResponseDto getBooth(Long boothId) {
         Booth booth = boothRepository.findById(boothId)

@@ -8,6 +8,7 @@ import kr.co.knuserver.application.booth.BoothQueryService;
 import kr.co.knuserver.global.dto.CursorPaginationResponse;
 import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.booth.docs.BoothApiControllerDocs;
+import kr.co.knuserver.presentation.booth.dto.BoothCountResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothRankingResponseDto;
@@ -35,6 +36,15 @@ public class BoothApiController implements BoothApiControllerDocs {
     private final BoothQueryService boothQueryService;
     private final BoothCommandService boothCommandService;
 
+    // 가두모집 부스 개수 조회
+    @Override
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse<BoothCountResponseDto>> getBoothCount() {
+        BoothCountResponseDto result = boothQueryService.getBoothCount();
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    // 가두모집 부스 단건 조회
     @Override
     @GetMapping("/{booth-id}")
     public ResponseEntity<ApiResponse<BoothInfoResponseDto>> getBooth(
@@ -45,6 +55,7 @@ public class BoothApiController implements BoothApiControllerDocs {
             .body(ApiResponse.success(result));
     }
 
+    // 키워드 단위 가두모집 부스 리스트 조회
     @Override
     @GetMapping("/list")
     public ResponseEntity<ApiResponse<List<BoothInfoResponseDto>>> searchBooths(
@@ -56,6 +67,7 @@ public class BoothApiController implements BoothApiControllerDocs {
             .body(ApiResponse.success(result));
     }
 
+    // 키워드 단위 가두모집 부스 리스트 조회
     @Override
     @GetMapping("/list/pagination")
     public ResponseEntity<ApiResponse<CursorPaginationResponse<BoothListResponseDto>>> searchBooths(
@@ -75,6 +87,9 @@ public class BoothApiController implements BoothApiControllerDocs {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
+
+
+    // 부스 정보(이미지 외 필드)만 수정
     @Override
     @PatchMapping("/{booth-id}")
     public ResponseEntity<ApiResponse<BoothInfoResponseDto>> updateBooth(
@@ -85,6 +100,7 @@ public class BoothApiController implements BoothApiControllerDocs {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
+    // 이미지만 수정
     @Override
     @PostMapping(value = "/{booth-id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<BoothInfoResponseDto>> updateBoothImages(
