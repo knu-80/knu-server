@@ -1,6 +1,5 @@
 package kr.co.knuserver.presentation.booth;
 
-
 import jakarta.validation.Valid;
 import java.util.List;
 import kr.co.knuserver.application.booth.BoothCommandService;
@@ -87,8 +86,6 @@ public class BoothApiController implements BoothApiControllerDocs {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
-
-
     // 부스 정보(이미지 외 필드)만 수정
     @Override
     @PatchMapping("/{booth-id}")
@@ -110,5 +107,4 @@ public class BoothApiController implements BoothApiControllerDocs {
         BoothInfoResponseDto result = boothCommandService.updateBoothImages(boothId, images);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
-
 }
