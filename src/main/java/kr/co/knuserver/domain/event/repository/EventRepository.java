@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    // 주어진 EventType 중 isActive==true인 event들만 리스트로 조회
-    List<Event> findAllByEventTypeAndIsActiveTrue(EventType eventType);
+    // 주어진 EventType 중 isActive==true인 event들만 리스트로 조회(id 오름차순)
+    List<Event> findAllByEventTypeAndIsActiveTrueOrderByIdAsc(EventType eventType);
 }

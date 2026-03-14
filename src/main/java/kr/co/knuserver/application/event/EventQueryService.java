@@ -26,7 +26,7 @@ public class EventQueryService {
     }
 
     public List<EventResponseDto> getEventListByEventType(EventType eventType) {
-        List<Event> events = eventRepository.findAllByEventTypeAndIsActiveTrue(eventType);
+        List<Event> events = eventRepository.findAllByEventTypeAndIsActiveTrueOrderByIdAsc(eventType);
 
         return events.stream()
             .map(EventResponseDto::fromEntity)
