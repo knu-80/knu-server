@@ -52,9 +52,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image (multi-arch)
         uses: docker/build-push-action@v5
         with:
           context: .
           push: ${{ github.repository == 'knu-80/knu-server' && github.event_name == 'push' }}
           tags: ghcr.io/knu-80/knu-server:latest
+          platforms: linux/amd64,linux/arm64

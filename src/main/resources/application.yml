@@ -73,13 +73,18 @@ admin:
         bucket: ${AWS_S3_BUCKET}
 
 management:
+  server:
+    port: ${MANAGEMENT_PORT:8081}
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "health,info,prometheus,metrics"
+  endpoint:
+    health:
+      show-details: when-authorized
 
 logging:
-#  config: classpath:logback/logback-${spring.profiles.active:local}.xml
+  config: classpath:logback/logback-${spring.profiles.active:local}.xml
   file:
     name: ${LOG_FILE_PATH:./logs/app.log}
 
