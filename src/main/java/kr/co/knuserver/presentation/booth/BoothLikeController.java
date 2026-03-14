@@ -2,12 +2,13 @@ package kr.co.knuserver.presentation.booth;
 
 import kr.co.knuserver.application.booth.BoothLikeService;
 import kr.co.knuserver.global.exception.ApiResponse;
+import kr.co.knuserver.global.filter.DeviceIdCookieFilter;
 import kr.co.knuserver.global.resolver.ClientIp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,11 +22,10 @@ public class BoothLikeController {
     @PostMapping("/{booth-id}/likes")
     public ResponseEntity<ApiResponse<Long>> like(
         @PathVariable(name = "booth-id") Long boothId,
-        @CookieValue(name = "deviceId") String deviceId,
+        @RequestAttribute(DeviceIdCookieFilter.DEVICE_ID_ATTRIBUTE) String deviceId,
         @ClientIp String clientIp
     ) {
         long count = boothLikeService.like(boothId, deviceId, clientIp);
         return ResponseEntity.ok(ApiResponse.success(count));
     }
-
 }
