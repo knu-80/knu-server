@@ -32,6 +32,12 @@ public class NoticeQueryService {
                 .toList();
     }
 
+    public List<NoticeListResponse> getRecentNotices() {
+        return noticeRepository.findTop3ByOrderByIdDesc().stream()
+                .map(NoticeListResponse::fromEntity)
+                .toList();
+    }
+
     public NoticeDetailResponse getNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOTICE_NOT_FOUND));
