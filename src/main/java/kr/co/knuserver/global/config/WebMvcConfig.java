@@ -1,6 +1,7 @@
 package kr.co.knuserver.global.config;
 
 import kr.co.knuserver.global.auth.MemberIdArgumentResolver;
+import kr.co.knuserver.global.resolver.ClientIpArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final MemberIdArgumentResolver memberIdArgumentResolver;
+    private final ClientIpArgumentResolver clientIpArgumentResolver;
 
     @Value("${cors.allowed-origins}")
     private String[] allowedOrigins;
@@ -22,6 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(memberIdArgumentResolver);
+        resolvers.add(clientIpArgumentResolver);
     }
 
     @Override
