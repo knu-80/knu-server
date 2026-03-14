@@ -67,9 +67,20 @@ public enum BusinessErrorCode implements ErrorCode {
     PUB_SESSION_ALREADY_EXISTS(HttpStatus.CONFLICT, "C205", "해당 테이블에 세션이 존재합니다."),
 
     /*
+     * 429 TOO_MANY_REQUESTS: 요청 횟수 초과
+     */
+    TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "C501", "요청 횟수가 초과되었습니다."),
+    DAILY_LIKE_LIMIT_EXCEEDED(HttpStatus.TOO_MANY_REQUESTS, "C502", "일일 좋아요 횟수를 초과했습니다."),
+
+    /*
      * 500 INTERNAL_SERVER_ERROR: 내부 서버 오류
      */
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C009", "서버 내부 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C009", "서버 내부 오류가 발생했습니다."),
+
+    /*
+     * 503 SERVICE_UNAVAILABLE: 서비스 일시 불가
+     */
+    REDIS_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "C010", "일시적으로 서비스를 이용할 수 없습니다. 잠시 후 다시 시도해주세요.");
 
     private final HttpStatus status;
     private final String code;

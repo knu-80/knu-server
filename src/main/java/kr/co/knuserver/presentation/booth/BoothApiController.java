@@ -1,6 +1,5 @@
 package kr.co.knuserver.presentation.booth;
 
-
 import jakarta.validation.Valid;
 import java.util.List;
 import kr.co.knuserver.application.booth.BoothCommandService;
@@ -11,6 +10,7 @@ import kr.co.knuserver.presentation.booth.docs.BoothApiControllerDocs;
 import kr.co.knuserver.presentation.booth.dto.BoothCountResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
+import kr.co.knuserver.presentation.booth.dto.BoothRankingResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -80,7 +80,11 @@ public class BoothApiController implements BoothApiControllerDocs {
             .body(ApiResponse.success(result));
     }
 
-
+    @GetMapping("/ranking")
+    public ResponseEntity<ApiResponse<List<BoothRankingResponseDto>>> getBoothRanking() {
+        List<BoothRankingResponseDto> result = boothQueryService.getBoothRanking();
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
 
     // 부스 정보(이미지 외 필드)만 수정
     @Override
@@ -103,5 +107,4 @@ public class BoothApiController implements BoothApiControllerDocs {
         BoothInfoResponseDto result = boothCommandService.updateBoothImages(boothId, images);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
-
 }

@@ -1,8 +1,10 @@
 package kr.co.knuserver.application.booth;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import kr.co.knuserver.domain.booth.entity.Booth;
 import kr.co.knuserver.domain.booth.entity.BoothImage;
@@ -14,6 +16,8 @@ import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.presentation.booth.dto.BoothCountResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
+import kr.co.knuserver.presentation.booth.dto.BoothRankingResponseDto;
+import org.springframework.data.redis.core.ZSetOperations;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +32,7 @@ public class BoothQueryService {
 
     private final BoothRepository boothRepository;
     private final BoothImageRepository boothImageRepository;
+    private final BoothLikeService boothLikeService;
 
     public BoothCountResponseDto getBoothCount() {
         Integer count = boothRepository.countByIsActiveTrue();
@@ -40,11 +45,11 @@ public class BoothQueryService {
         List<String> imageUrls = boothImageRepository.findAllByBoothId(boothId).stream()
             .map(BoothImage::getImageUrl)
             .toList();
-        return BoothInfoResponseDto.fromEntity(booth, imageUrls);
+        long likeCount = boothLikeService.getLikeCount(boothId);
+        return BoothInfoResponseDto.fromEntity(booth, imageUrls, likeCount);
     }
 
 
-    // 주어진 키워드를 바탕으로 부스 리스트 조회(페이지네이션 없는 버전)
     public List<BoothInfoResponseDto> searchBoothsByKeyword1(String keyword) {
         List<Booth> booths;
 
@@ -67,8 +72,31 @@ public class BoothQueryService {
             .toList();
     }
 
+    public List<BoothRankingResponseDto> getBoothRanking() {
+        List<Booth> allBooths = boothRepository.findByIsActiveTrue();
+        if (allBooths.isEmpty()) {
+            return List.of();
+        }
+
+        Set<ZSetOperations.TypedTuple<String>> ranking = boothLikeService.getRanking();
+        Map<Long, Long> likeCountMap = (ranking == null) ? Map.of() : ranking.stream()
+            .collect(Collectors.toMap(
+                t -> Long.parseLong(t.getValue()),
+                t -> t.getScore() == null ? 0L : t.getScore().longValue()
+            ));
+
+        return allBooths.stream()
+            .map(booth -> new BoothRankingResponseDto(
+                booth.getId(),
+                booth.getName(),
+                likeCountMap.getOrDefault(booth.getId(), 0L)
+            ))
+            .sorted(Comparator.comparingLong(BoothRankingResponseDto::likeCount).reversed()
+                .thenComparingLong(BoothRankingResponseDto::boothId))
+            .toList();
+    }
+
   
-    // 주어진 키워드를 바탕으로 부스 리스트 조회 (커서 기반 페이지네이션)
     public CursorPaginationResponse<BoothListResponseDto> searchBoothsByKeyword2(String keyword, Long lastId, int size) {
         Pageable pageable = PageRequest.of(0, size + 1);
         List<Booth> booths;

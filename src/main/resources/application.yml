@@ -53,6 +53,19 @@ spring:
   devtools:
     restart:
       enabled: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 3000ms
+
+device-id:
+  cookie:
+    max-age: ${DEVICE_ID_COOKIE_MAX_AGE:31536000} # 기본값 1년 (초 단위)
+
+like:
+  rate-limit:
+    ttl-seconds: ${LIKE_RATE_LIMIT_TTL_SECONDS:1}
 
 cors:
   allowed-origins: ${ALLOWED_ORIGINS}
