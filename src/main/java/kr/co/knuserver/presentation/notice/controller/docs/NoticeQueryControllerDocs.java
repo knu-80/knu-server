@@ -20,6 +20,12 @@ public interface NoticeQueryControllerDocs {
     })
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<List<NoticeListResponse>>> getNotices();
 
+    @Operation(summary = "최근 공지사항 조회", description = "최신 공지사항 3개를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<List<NoticeListResponse>>> getRecentNotices();
+
     @Operation(summary = "공지사항 단건 조회", description = "공지사항 ID로 상세 정보를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공"),

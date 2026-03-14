@@ -26,6 +26,13 @@ public class NoticeQueryController implements NoticeQueryControllerDocs {
     }
 
     @Override
+    @GetMapping("/recent")
+    public ResponseEntity<ApiResponse<List<NoticeListResponse>>> getRecentNotices() {
+        List<NoticeListResponse> result = noticeQueryService.getRecentNotices();
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @Override
     @GetMapping("/{notice-id}")
     public ResponseEntity<ApiResponse<NoticeDetailResponse>> getNotice(
             @PathVariable("notice-id") Long noticeId
