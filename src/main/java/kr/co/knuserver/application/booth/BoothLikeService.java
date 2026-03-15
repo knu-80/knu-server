@@ -3,6 +3,9 @@ package kr.co.knuserver.application.booth;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Set;
+import kr.co.knuserver.domain.booth.entity.Booth;
+import kr.co.knuserver.domain.booth.entity.BoothDivision;
+import kr.co.knuserver.domain.booth.repository.BoothRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +28,15 @@ public class BoothLikeService {
     private long rateLimitTtlSeconds;
 
     private final StringRedisTemplate redisTemplate;
+    private final BoothRepository boothRepository;
 
     public long like(Long boothId, String deviceId, String clientIp) {
+        Booth booth = boothRepository.findById(boothId)
+            .orElseThrow(() -> new BusinessException(BusinessErrorCode.BOOTH_NOT_FOUND));
+        if (booth.getDivision() == BoothDivision.EXTERNAL_SUPPORT) {
+            throw new BusinessException(BusinessErrorCode.LIKE_NOT_ALLOWED);
+        }
+
         try {
             checkRateLimit(clientIp, deviceId, boothId);
             Double score = redisTemplate.opsForZSet().incrementScore(RANKING_KEY, String.valueOf(boothId), 1);

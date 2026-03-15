@@ -43,6 +43,7 @@ public enum BusinessErrorCode implements ErrorCode {
      */
     EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C102", "이벤트가 존재하지 않습니다."),
     BOOTH_NOT_FOUND(HttpStatus.NOT_FOUND, "C101", "존재하지 않는 부스입니다."),
+    LIKE_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "C103", "해당 부스는 좋아요를 등록할 수 없습니다."),
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "C403", "해당 공지사항을 찾을 수 없습니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "C404", "해당 사용자를 찾을 수 없습니다."),
     PUB_TABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "C201", "존재하지 않는 테이블입니다."),
