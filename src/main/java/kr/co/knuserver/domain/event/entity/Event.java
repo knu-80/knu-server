@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import kr.co.knuserver.domain.common.vo.DurationVO;
 import kr.co.knuserver.global.base.BaseTimeEntity;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
