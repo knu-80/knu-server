@@ -53,7 +53,6 @@ public class BoothLikeService {
         try {
             Double score = redisTemplate.opsForZSet().score(RANKING_KEY, String.valueOf(boothId));
             if (score == null) {
-                redisTemplate.opsForZSet().addIfAbsent(RANKING_KEY, String.valueOf(boothId), 0);
                 return 0L;
             }
             return score.longValue();

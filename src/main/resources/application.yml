@@ -3,6 +3,9 @@ server:
   servlet:
     session:
       timeout: 1800
+      cookie:
+        secure: true
+        same-site: strict
   tomcat:
     max-connections: ${TOMCAT_MAX_CONNECTIONS:20000}
     threads:

@@ -6,7 +6,7 @@
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%clr(%d{HH:mm:ss.SSS}){faint}|%clr(${level:-%5p})|%32X{traceId:-},%16X{spanId:-}|%clr(%-40.40logger{39}){cyan}%clr(|){faint}%m%n%nopex</pattern>
+      <pattern>%clr(%d{HH:mm:ss.SSS}){faint}|%clr(${level:-%5p})|%32X{traceId:-},%16X{spanId:-}|%clr(%-40.40logger{39}){cyan}%clr(|){faint}%m%n%ex{5}</pattern>
       <charset>utf8</charset>
     </encoder>
   </appender>
@@ -15,7 +15,7 @@
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${LOG_PATH}</file>
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%32X{traceId:-},%16X{spanId:-}|%-40.40logger{39}|%m%n%nopex</pattern>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%32X{traceId:-},%16X{spanId:-}|%-40.40logger{39}|%m%n%ex{5}</pattern>
       <charset>utf8</charset>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -27,10 +27,10 @@
   </appender>
 
   <logger name="kr.co.knuserver" level="INFO"/>
-  <logger name="org.springframework.web" level="WARN"/>
-  <logger name="com.zaxxer.hikari.pool" level="WARN"/>
-  <logger name="org.hibernate.orm.jdbc" level="WARN"/>
-  <logger name="org.hibernate.orm.core" level="WARN"/>
+  <logger name="org.springframework.web" level="ERROR"/>
+  <logger name="com.zaxxer.hikari.pool" level="ERROR"/>
+  <logger name="org.hibernate.orm.jdbc" level="ERROR"/>
+  <logger name="org.hibernate.orm.core" level="ERROR"/>
 
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
