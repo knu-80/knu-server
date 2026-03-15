@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import kr.co.knuserver.global.auth.MemberId;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothRegisterRequestDto;
 import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
@@ -36,6 +37,7 @@ public interface AdminBoothApiControllerDocs {
             @ApiResponse(responseCode = "404", description = "부스를 찾을 수 없음"),
     })
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> updateBooth(
+            @MemberId Long memberId,
             @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId,
             @Valid @RequestBody BoothUpdateRequestDto request);
 
@@ -45,6 +47,7 @@ public interface AdminBoothApiControllerDocs {
             @ApiResponse(responseCode = "404", description = "부스 없음")
     })
     ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> updateBoothImages(
+            @MemberId Long memberId,
             @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId,
             @Parameter(description = "교체할 이미지 목록 (선택, 미전송 시 이미지 전체 삭제)")
             @RequestPart(value = "images", required = false) List<MultipartFile> images);
