@@ -5,6 +5,9 @@ import kr.co.knuserver.domain.booth.entity.Booth;
 import kr.co.knuserver.domain.booth.entity.BoothImage;
 import kr.co.knuserver.domain.booth.repository.BoothImageRepository;
 import kr.co.knuserver.domain.booth.repository.BoothRepository;
+import kr.co.knuserver.domain.member.entity.Member;
+import kr.co.knuserver.domain.member.entity.Role;
+import kr.co.knuserver.domain.member.repository.MemberRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
 import kr.co.knuserver.infra.s3.S3Uploader;
@@ -26,6 +29,7 @@ public class BoothCommandService {
     private final BoothRepository boothRepository;
     private final BoothImageRepository boothImageRepository;
     private final S3Uploader s3Uploader;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public BoothInfoResponseDto registerBooth(
@@ -40,9 +44,12 @@ public class BoothCommandService {
     }
 
     @Transactional
-    public BoothInfoResponseDto updateBooth(Long boothId, BoothUpdateRequestDto request) {
+    public BoothInfoResponseDto updateBooth(Long boothId, BoothUpdateRequestDto request, Long memberId) {
         Booth booth = boothRepository.findById(boothId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.BOOTH_NOT_FOUND));
+
+        validateRole(booth, memberId);
+
         booth.updateFromDto(request);
 
         List<String> imageUrls = boothImageRepository.findAllByBoothId(boothId).stream()
@@ -53,9 +60,11 @@ public class BoothCommandService {
     }
 
     @Transactional
-    public BoothInfoResponseDto updateBoothImages(Long boothId, List<MultipartFile> images) {
+    public BoothInfoResponseDto updateBoothImages(Long boothId, List<MultipartFile> images, Long memberId) {
         Booth booth = boothRepository.findById(boothId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.BOOTH_NOT_FOUND));
+
+        validateRole(booth, memberId);
 
         List<String> oldImageUrls = boothImageRepository.findAllByBoothId(boothId).stream()
             .map(BoothImage::getImageUrl)
@@ -95,6 +104,17 @@ public class BoothCommandService {
                 return imageUrl;
             })
             .toList();
+    }
+
+    private void validateRole(Booth booth, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new BusinessException(BusinessErrorCode.MEMBER_NOT_FOUND));
+        if (member.getRole() == Role.ADMIN) {
+            return;
+        }
+        if (!booth.getMemberId().equals(memberId)) {
+            throw new BusinessException(BusinessErrorCode.ACCESS_DENIED);
+        }
     }
 
 }

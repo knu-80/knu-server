@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import kr.co.knuserver.application.booth.BoothCommandService;
 import kr.co.knuserver.domain.member.entity.Role;
+import kr.co.knuserver.global.auth.MemberId;
 import kr.co.knuserver.global.auth.RequireRole;
 import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.booth.docs.AdminBoothApiControllerDocs;
@@ -27,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/admin/v1/booths")
 @RequiredArgsConstructor
-@RequireRole(Role.ADMIN)
 public class AdminBoothApiController implements AdminBoothApiControllerDocs {
 
     private final BoothCommandService boothCommandService;
@@ -35,6 +35,7 @@ public class AdminBoothApiController implements AdminBoothApiControllerDocs {
     // 가두모집 부스 생성
     @Override
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequireRole(Role.ADMIN)
     public ResponseEntity<ApiResponse<BoothInfoResponseDto>> createBooth(
         @RequestPart(value = "data") @Valid BoothRegisterRequestDto request,
         @RequestPart(value = "images", required = false) List<MultipartFile> images
@@ -48,10 +49,11 @@ public class AdminBoothApiController implements AdminBoothApiControllerDocs {
     @Override
     @PatchMapping("/{booth-id}")
     public ResponseEntity<ApiResponse<BoothInfoResponseDto>> updateBooth(
+        @MemberId Long memberId,
         @PathVariable(name = "booth-id") Long boothId,
         @Valid @RequestBody BoothUpdateRequestDto request
     ) {
-        BoothInfoResponseDto result = boothCommandService.updateBooth(boothId, request);
+        BoothInfoResponseDto result = boothCommandService.updateBooth(boothId, request, memberId);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
@@ -59,10 +61,11 @@ public class AdminBoothApiController implements AdminBoothApiControllerDocs {
     @Override
     @PostMapping(value = "/{booth-id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<BoothInfoResponseDto>> updateBoothImages(
+        @MemberId Long memberId,
         @PathVariable(name = "booth-id") Long boothId,
         @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
-        BoothInfoResponseDto result = boothCommandService.updateBoothImages(boothId, images);
+        BoothInfoResponseDto result = boothCommandService.updateBoothImages(boothId, images, memberId);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
@@ -70,6 +73,7 @@ public class AdminBoothApiController implements AdminBoothApiControllerDocs {
     // 가두모집 부스 삭제
     @Override
     @DeleteMapping("/{booth-id}")
+    @RequireRole(Role.ADMIN)
     public ResponseEntity<ApiResponse<?>> deleteBooth(
         @PathVariable(name = "booth-id") Long boothId
     ) {

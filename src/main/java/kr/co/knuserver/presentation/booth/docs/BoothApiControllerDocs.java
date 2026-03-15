@@ -60,23 +60,4 @@ public interface BoothApiControllerDocs {
         @Parameter(description = "페이지 크기 (기본값: 10)")
         @RequestParam(name = "size", required = false, defaultValue = "10") int size
     );
-
-    @Operation(summary = "가두모집 부스 정보 수정", description = "부스의 텍스트 필드(이름, 번호, 설명 등)를 수정합니다. 이미지 변경은 이미지 수정 API를 사용하세요.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "부스 수정 성공"),
-        @ApiResponse(responseCode = "404", description = "부스를 찾을 수 없음"),
-    })
-    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> updateBooth(
-        @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId,
-        @Valid @RequestBody BoothUpdateRequestDto request);
-
-    @Operation(summary = "가두모집 부스 이미지 수정", description = "부스의 이미지를 교체합니다.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "이미지 수정 성공"),
-        @ApiResponse(responseCode = "404", description = "부스 없음")
-    })
-    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<BoothInfoResponseDto>> updateBoothImages(
-        @Parameter(description = "부스 ID", required = true) @PathVariable(name = "booth-id") Long boothId,
-        @Parameter(description = "교체할 이미지 목록 (선택, 미전송 시 이미지 전체 삭제)")
-        @RequestPart(value = "images", required = false) List<MultipartFile> images);
 }

@@ -85,26 +85,4 @@ public class BoothApiController implements BoothApiControllerDocs {
         List<BoothRankingResponseDto> result = boothQueryService.getBoothRanking();
         return ResponseEntity.ok(ApiResponse.success(result));
     }
-
-    // 부스 정보(이미지 외 필드)만 수정
-    @Override
-    @PatchMapping("/{booth-id}")
-    public ResponseEntity<ApiResponse<BoothInfoResponseDto>> updateBooth(
-        @PathVariable(name = "booth-id") Long boothId,
-        @Valid @RequestBody BoothUpdateRequestDto request
-    ) {
-        BoothInfoResponseDto result = boothCommandService.updateBooth(boothId, request);
-        return ResponseEntity.ok(ApiResponse.success(result));
-    }
-
-    // 이미지만 수정
-    @Override
-    @PostMapping(value = "/{booth-id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<BoothInfoResponseDto>> updateBoothImages(
-        @PathVariable(name = "booth-id") Long boothId,
-        @RequestPart(value = "images", required = false) List<MultipartFile> images
-    ) {
-        BoothInfoResponseDto result = boothCommandService.updateBoothImages(boothId, images);
-        return ResponseEntity.ok(ApiResponse.success(result));
-    }
 }
