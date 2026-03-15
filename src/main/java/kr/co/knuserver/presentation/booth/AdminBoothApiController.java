@@ -3,6 +3,8 @@ package kr.co.knuserver.presentation.booth;
 import jakarta.validation.Valid;
 import java.util.List;
 import kr.co.knuserver.application.booth.BoothCommandService;
+import kr.co.knuserver.domain.member.entity.Role;
+import kr.co.knuserver.global.auth.RequireRole;
 import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.booth.docs.AdminBoothApiControllerDocs;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/admin/v1/booths")
 @RequiredArgsConstructor
+@RequireRole(Role.ADMIN)
 public class AdminBoothApiController implements AdminBoothApiControllerDocs {
 
     private final BoothCommandService boothCommandService;

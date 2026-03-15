@@ -2,6 +2,8 @@ package kr.co.knuserver.presentation.performance;
 
 import jakarta.validation.Valid;
 import kr.co.knuserver.application.performance.PerformanceCommandService;
+import kr.co.knuserver.domain.member.entity.Role;
+import kr.co.knuserver.global.auth.RequireRole;
 import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.performance.docs.PerformanceCommandControllerDocs;
 import kr.co.knuserver.presentation.performance.dto.PerformanceCreateRequestDto;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin/v1/performances")
 @RequiredArgsConstructor
+@RequireRole(Role.CLUB_ADMIN)
 public class PerformanceCommandController implements PerformanceCommandControllerDocs {
 
     private final PerformanceCommandService performanceCommandService;

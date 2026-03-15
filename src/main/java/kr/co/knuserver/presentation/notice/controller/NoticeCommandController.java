@@ -2,7 +2,9 @@ package kr.co.knuserver.presentation.notice.controller;
 
 import jakarta.validation.Valid;
 import kr.co.knuserver.application.notice.NoticeCommandService;
+import kr.co.knuserver.domain.member.entity.Role;
 import kr.co.knuserver.global.auth.MemberId;
+import kr.co.knuserver.global.auth.RequireRole;
 import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.notice.dto.request.NoticeCreateRequest;
 import kr.co.knuserver.presentation.notice.dto.response.NoticeResponse;
@@ -20,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/v1/notices")
 @RequiredArgsConstructor
+@RequireRole(Role.CLUB_ADMIN)
 public class NoticeCommandController implements NoticeCommandControllerDocs {
 
     private final NoticeCommandService noticeCommandService;
