@@ -1,8 +1,9 @@
 package kr.co.knuserver.presentation.event;
 
 import jakarta.validation.Valid;
-import java.util.List;
 import kr.co.knuserver.application.event.EventCommandService;
+import kr.co.knuserver.domain.member.entity.Role;
+import kr.co.knuserver.global.auth.RequireRole;
 import kr.co.knuserver.global.exception.ApiResponse;
 import kr.co.knuserver.presentation.event.docs.AdminEventApiControllerDocs;
 import kr.co.knuserver.presentation.event.dto.EventRequestDto;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/admin/v1/events")
 @RequiredArgsConstructor
+@RequireRole(Role.ADMIN)
 public class AdminEventApiController implements AdminEventApiControllerDocs {
 
     private final EventCommandService eventCommandService;
