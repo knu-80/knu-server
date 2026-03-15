@@ -31,13 +31,17 @@ public class Performance extends BaseTimeEntity {
     @Column(name = "booth_id", nullable = false)
     private Long boothId;
 
+    @Column(name = "session", nullable = false)
+    private Integer session;
+
     @Embedded
     private DurationVO performanceDuration;
 
-    public static Performance create(Long boothId, LocalDateTime startAt, LocalDateTime endAt) {
+    public static Performance create(Long boothId, Integer session, LocalDateTime startAt, LocalDateTime endAt) {
         DurationVO duration = DurationVO.createDurationVO(startAt, endAt);
         return Performance.builder()
             .boothId(boothId)
+            .session(session)
             .performanceDuration(duration)
             .build();
     }
