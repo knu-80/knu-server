@@ -73,25 +73,23 @@ public class BoothQueryService {
     }
 
     public List<BoothRankingResponseDto> getBoothRanking() {
-        Set<ZSetOperations.TypedTuple<String>> ranking = boothLikeService.getRanking();
-        if (ranking == null || ranking.isEmpty()) {
+        Set<ZSetOperations.TypedTuple<String>> rawRanking = boothLikeService.getRanking();
+        if (rawRanking == null || rawRanking.isEmpty()) {
             return List.of();
         }
 
-        Map<Long, Long> likeCountMap = ranking.stream()
-            .collect(Collectors.toMap(
-                t -> Long.parseLong(t.getValue()),
-                t -> t.getScore() == null ? 0L : t.getScore().longValue()
-            ));
+        BoothRanking boothRanking = new BoothRanking(rawRanking);
+        if (boothRanking.isEmpty()) {
+            return List.of();
+        }
 
-        List<Long> boothIds = List.copyOf(likeCountMap.keySet());
-        List<Booth> booths = boothRepository.findAllById(boothIds);
+        List<Booth> booths = boothRepository.findAllById(boothRanking.boothIds());
 
         return booths.stream()
             .map(booth -> new BoothRankingResponseDto(
                 booth.getId(),
                 booth.getName(),
-                likeCountMap.getOrDefault(booth.getId(), 0L)
+                boothRanking.getLikeCount(booth.getId())
             ))
             .sorted(Comparator.comparingLong(BoothRankingResponseDto::likeCount).reversed()
                 .thenComparingLong(BoothRankingResponseDto::boothId))
@@ -127,12 +125,12 @@ public class BoothQueryService {
         List<BoothListResponseDto> items = pagedBooths.stream()
             .map(booth -> {
                 List<String> urls = imageUrlsMap.getOrDefault(booth.getId(), Collections.emptyList());
-                String firstImageUrl = urls.isEmpty() ? null : urls.get(0);
+                String firstImageUrl = urls.isEmpty() ? null : urls.getFirst();
                 return BoothListResponseDto.fromEntity(booth, firstImageUrl);
             })
             .toList();
 
-        Long nextCursor = items.isEmpty() ? null : items.get(items.size() - 1).id();
+        Long nextCursor = items.isEmpty() ? null : items.getLast().id();
 
         return CursorPaginationResponse.of(items, nextCursor, hasNext);
     }
