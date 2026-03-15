@@ -73,19 +73,21 @@ public class BoothQueryService {
     }
 
     public List<BoothRankingResponseDto> getBoothRanking() {
-        List<Booth> allBooths = boothRepository.findByIsActiveTrue();
-        if (allBooths.isEmpty()) {
+        Set<ZSetOperations.TypedTuple<String>> ranking = boothLikeService.getRanking();
+        if (ranking == null || ranking.isEmpty()) {
             return List.of();
         }
 
-        Set<ZSetOperations.TypedTuple<String>> ranking = boothLikeService.getRanking();
-        Map<Long, Long> likeCountMap = (ranking == null) ? Map.of() : ranking.stream()
+        Map<Long, Long> likeCountMap = ranking.stream()
             .collect(Collectors.toMap(
                 t -> Long.parseLong(t.getValue()),
                 t -> t.getScore() == null ? 0L : t.getScore().longValue()
             ));
 
-        return allBooths.stream()
+        List<Long> boothIds = List.copyOf(likeCountMap.keySet());
+        List<Booth> booths = boothRepository.findAllById(boothIds);
+
+        return booths.stream()
             .map(booth -> new BoothRankingResponseDto(
                 booth.getId(),
                 booth.getName(),

@@ -1,6 +1,7 @@
 package kr.co.knuserver.application.booth;
 
 import jakarta.annotation.PostConstruct;
+import kr.co.knuserver.domain.booth.entity.BoothDivision;
 import kr.co.knuserver.domain.booth.repository.BoothRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class BoothLikeWarmupRunner {
         try {
             log.debug("[LikeWarmup] 부스 좋아요 캐시 초기화 시작");
 
-            boothRepository.findByIsActiveTrue()
+            boothRepository.findByIsActiveTrueAndDivisionNot(BoothDivision.EXTERNAL_SUPPORT)
                 .forEach(booth -> redisTemplate.opsForZSet()
                     .addIfAbsent(RANKING_KEY, String.valueOf(booth.getId()), 0));
 
