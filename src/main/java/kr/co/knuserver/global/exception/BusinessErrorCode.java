@@ -48,12 +48,9 @@ public enum BusinessErrorCode implements ErrorCode {
     PUB_TABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "C201", "존재하지 않는 테이블입니다."),
     PUB_WAITING_NOT_FOUND(HttpStatus.NOT_FOUND, "C202", "존재하지 않는 웨이팅입니다."),
     PUB_TABLE_SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "C204", "존재하지 않는 세션입니다."),
-
-    /*
-     * 404 NOT_FOUND: 리소스를 찾을 수 없음
-     */
     PUB_BOOTH_NOT_FOUND(HttpStatus.NOT_FOUND, "C301", "해당 주점을 찾을 수 없습니다."),
     PUB_MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "C302", "해당 주점 메뉴를 찾을 수 없습니다."),
+    PERFORMANCE_NOT_FOUND(HttpStatus.NOT_FOUND, "C405", "공연 정보를 찾을 수 없습니다."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
