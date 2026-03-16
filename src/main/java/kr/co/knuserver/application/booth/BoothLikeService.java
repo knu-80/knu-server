@@ -1,6 +1,8 @@
 package kr.co.knuserver.application.booth;
 
 import java.time.Duration;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Set;
 import kr.co.knuserver.domain.booth.entity.Booth;
@@ -27,6 +29,15 @@ public class BoothLikeService {
     @Value("${like.rate-limit.ttl-seconds}")
     private long rateLimitTtlSeconds;
 
+    @Value("${like.double-event.enabled:false}")
+    private boolean doubleEventEnabled;
+
+    @Value("${like.double-event.start-time:13:00}")
+    private String doubleEventStart;
+
+    @Value("${like.double-event.end-time:15:00}")
+    private String doubleEventEnd;
+
     private final StringRedisTemplate redisTemplate;
     private final BoothRepository boothRepository;
 
@@ -39,7 +50,9 @@ public class BoothLikeService {
 
         try {
             checkRateLimit(clientIp, deviceId, boothId);
-            Double score = redisTemplate.opsForZSet().incrementScore(RANKING_KEY, String.valueOf(boothId), 1);
+            int multiplier = getLikeMultiplier();
+            Double score = redisTemplate.opsForZSet().incrementScore(RANKING_KEY, String.valueOf(boothId), multiplier);
+            log.debug("[Like] boothId={} multiplier={} score={}", boothId, multiplier, score);
             return score == null ? 0 : score.longValue();
         } catch (BusinessException e) {
             throw e;
@@ -69,6 +82,20 @@ public class BoothLikeService {
             log.warn("[Ranking] Redis 조회 실패, 빈 셋 반환", e);
             return Collections.emptySet();
         }
+    }
+
+    private int getLikeMultiplier() {
+        if (!doubleEventEnabled) {
+            return 1;
+        }
+        LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
+        LocalTime start = LocalTime.parse(doubleEventStart);
+        LocalTime end = LocalTime.parse(doubleEventEnd);
+        boolean isEventTime = !now.isBefore(start) && now.isBefore(end);
+        if (isEventTime) {
+            log.debug("[DoubleEvent] 2배 이벤트 적용 중 now={}", now);
+        }
+        return isEventTime ? 2 : 1;
     }
 
     private void checkRateLimit(String clientIp, String deviceId, Long boothId) {

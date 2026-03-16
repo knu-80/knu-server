@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
 @RestControllerAdvice
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("[400] Validation Failed: {}", e.getBindingResult().getAllErrors().getFirst().getDefaultMessage());
         final ApiResponse response = ApiResponse.error(e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    protected ResponseEntity<ApiResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        log.debug("[400] Type Mismatch: {}", e.getMessage());
+        final ApiResponse response = ApiResponse.error(BusinessErrorCode.INVALID_INPUT_VALUE);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
