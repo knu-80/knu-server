@@ -11,6 +11,7 @@ import kr.co.knuserver.presentation.booth.dto.BoothCountResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothRankingResponseDto;
+import kr.co.knuserver.presentation.booth.dto.BoothTop3ResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -80,9 +81,17 @@ public class BoothApiController implements BoothApiControllerDocs {
             .body(ApiResponse.success(result));
     }
 
+    @Override
     @GetMapping("/ranking")
     public ResponseEntity<ApiResponse<List<BoothRankingResponseDto>>> getBoothRanking() {
         List<BoothRankingResponseDto> result = boothQueryService.getBoothRanking();
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @Override
+    @GetMapping("/ranking/top3")
+    public ResponseEntity<ApiResponse<List<BoothTop3ResponseDto>>> getTop3BoothRanking() {
+        List<BoothTop3ResponseDto> result = boothQueryService.getTop3BoothRanking();
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 }

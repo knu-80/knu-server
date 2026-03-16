@@ -17,6 +17,7 @@ import kr.co.knuserver.presentation.booth.dto.BoothCountResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothRankingResponseDto;
+import kr.co.knuserver.presentation.booth.dto.BoothTop3ResponseDto;
 import org.springframework.data.redis.core.ZSetOperations;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -96,7 +97,31 @@ public class BoothQueryService {
             .toList();
     }
 
-  
+    public List<BoothTop3ResponseDto> getTop3BoothRanking() {
+        Set<ZSetOperations.TypedTuple<String>> rawRanking = boothLikeService.getTopRanking(10);
+        if (rawRanking == null || rawRanking.isEmpty()) {
+            return List.of();
+        }
+
+        BoothRanking boothRanking = new BoothRanking(rawRanking);
+        if (boothRanking.isEmpty()) {
+            return List.of();
+        }
+
+        List<Booth> booths = boothRepository.findAllById(boothRanking.boothIds());
+
+        return booths.stream()
+            .map(booth -> new BoothTop3ResponseDto(
+                booth.getId(),
+                booth.getName(),
+                boothRanking.getLikeCount(booth.getId())
+            ))
+            .sorted(Comparator.comparingLong(BoothTop3ResponseDto::likeCount).reversed()
+                .thenComparingLong(BoothTop3ResponseDto::boothId))
+            .limit(3)
+            .toList();
+    }
+
     public CursorPaginationResponse<BoothListResponseDto> searchBoothsByKeyword2(String keyword, Long lastId, int size) {
         Pageable pageable = PageRequest.of(0, size + 1);
         List<Booth> booths;
