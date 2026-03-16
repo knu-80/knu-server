@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/v1/notices")
 @RequiredArgsConstructor
-@RequireRole(Role.CLUB_ADMIN)
+@RequireRole(Role.ADMIN)
 public class NoticeCommandController implements NoticeCommandControllerDocs {
 
     private final NoticeCommandService noticeCommandService;
