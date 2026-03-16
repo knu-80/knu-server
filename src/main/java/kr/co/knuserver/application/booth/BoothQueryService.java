@@ -98,7 +98,7 @@ public class BoothQueryService {
     }
 
     public List<BoothTop3ResponseDto> getTop3BoothRanking() {
-        Set<ZSetOperations.TypedTuple<String>> rawRanking = boothLikeService.getRanking();
+        Set<ZSetOperations.TypedTuple<String>> rawRanking = boothLikeService.getTopRanking(10);
         if (rawRanking == null || rawRanking.isEmpty()) {
             return List.of();
         }
