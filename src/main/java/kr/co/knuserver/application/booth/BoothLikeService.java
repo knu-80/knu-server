@@ -91,7 +91,8 @@ public class BoothLikeService {
             log.warn("[Ranking] Redis 조회 실패, 빈 셋 반환", e);
             return Collections.emptySet();
         }
-    
+    }
+
     private int getLikeMultiplier() {
         if (!doubleEventEnabled) {
             return 1;
@@ -104,15 +105,6 @@ public class BoothLikeService {
             log.debug("[DoubleEvent] 2배 이벤트 적용 중 now={}", now);
         }
         return isEventTime ? 2 : 1;
-    }
-
-    public Set<ZSetOperations.TypedTuple<String>> getTopRanking(int limit) {
-        try {
-            return redisTemplate.opsForZSet().reverseRangeWithScores(RANKING_KEY, 0, limit - 1);
-        } catch (DataAccessException e) {
-            log.warn("[Ranking] Redis 조회 실패, 빈 셋 반환", e);
-            return Collections.emptySet();
-        }
     }
 
     private void checkRateLimit(String clientIp, String deviceId, Long boothId) {
