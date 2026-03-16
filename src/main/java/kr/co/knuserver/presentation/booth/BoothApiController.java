@@ -81,6 +81,7 @@ public class BoothApiController implements BoothApiControllerDocs {
             .body(ApiResponse.success(result));
     }
 
+    @Override
     @GetMapping("/ranking")
     public ResponseEntity<ApiResponse<List<BoothRankingResponseDto>>> getBoothRanking() {
         List<BoothRankingResponseDto> result = boothQueryService.getBoothRanking();
