@@ -11,6 +11,7 @@ import kr.co.knuserver.global.dto.CursorPaginationResponse;
 import kr.co.knuserver.presentation.booth.dto.BoothCountResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
+import kr.co.knuserver.presentation.booth.dto.BoothTop3ResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,4 +61,10 @@ public interface BoothApiControllerDocs {
         @Parameter(description = "페이지 크기 (기본값: 10)")
         @RequestParam(name = "size", required = false, defaultValue = "10") int size
     );
+
+    @Operation(summary = "가두모집 부스 좋아요 TOP 3 조회", description = "좋아요 수 기준 상위 3개 부스를 반환합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "TOP 3 랭킹 조회 성공")
+    })
+    ResponseEntity<kr.co.knuserver.global.exception.ApiResponse<List<BoothTop3ResponseDto>>> getTop3BoothRanking();
 }
