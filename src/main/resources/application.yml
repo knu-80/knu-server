@@ -75,6 +75,11 @@ device-id:
 like:
   rate-limit:
     ttl-seconds: ${LIKE_RATE_LIMIT_TTL_SECONDS:1}
+    max-likes: ${LIKE_RATE_LIMIT_MAX_LIKES:600}
+  double-event:
+    enabled: ${LIKE_DOUBLE_EVENT_ENABLED:false}
+    start-time: ${LIKE_DOUBLE_EVENT_START:12:00}
+    end-time: ${LIKE_DOUBLE_EVENT_END:14:00}
 
 cors:
   allowed-origins: ${ALLOWED_ORIGINS}
