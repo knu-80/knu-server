@@ -41,11 +41,11 @@ public class DeviceIdCookieFilter implements Filter {
         String deviceId = resolveDeviceId(httpRequest);
         if (deviceId == null) {
             deviceId = deviceIdGenerator.generate();
-            Cookie cookie = new Cookie(COOKIE_NAME, deviceId);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            cookie.setMaxAge(cookieMaxAge);
-            httpResponse.addCookie(cookie);
+            String cookieHeader = String.format(
+                "%s=%s; Path=/; Max-Age=%d; HttpOnly; SameSite=Lax; Secure",
+                COOKIE_NAME, deviceId, cookieMaxAge
+            );
+            httpResponse.addHeader("Set-Cookie", cookieHeader);
             log.debug("[DeviceId] 신규 발급 ip={} deviceId={}",
                 httpRequest.getAttribute(ClientIpFilter.CLIENT_IP_ATTRIBUTE), deviceId);
         }
@@ -55,6 +55,9 @@ public class DeviceIdCookieFilter implements Filter {
     }
 
     private boolean isLikesPath(HttpServletRequest request) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return false;
+        }
         String uri = request.getRequestURI();
         return uri.matches(".*/booths/[^/]+/likes$");
     }
