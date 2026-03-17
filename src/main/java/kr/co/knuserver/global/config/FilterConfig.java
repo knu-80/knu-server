@@ -2,6 +2,7 @@ package kr.co.knuserver.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.knuserver.application.booth.DeviceIdGenerator;
+import kr.co.knuserver.global.filter.ClientIpFilter;
 import kr.co.knuserver.global.filter.DeviceIdCookieFilter;
 import kr.co.knuserver.global.filter.LikeRateLimitFilter;
 import kr.co.knuserver.global.ratelimit.LikeRateLimiter;
@@ -21,6 +22,14 @@ public class FilterConfig {
     private final DeviceIdGenerator deviceIdGenerator;
     private final LikeRateLimiter likeRateLimiter;
     private final ObjectMapper objectMapper;
+
+    @Bean
+    public FilterRegistrationBean<ClientIpFilter> clientIpFilter() {
+        FilterRegistrationBean<ClientIpFilter> bean = new FilterRegistrationBean<>(new ClientIpFilter());
+        bean.addUrlPatterns("/api/v1/*");
+        bean.setOrder(1);
+        return bean;
+    }
 
     @Bean
     public FilterRegistrationBean<DeviceIdCookieFilter> deviceIdCookieFilter() {

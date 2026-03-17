@@ -7,9 +7,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import org.springframework.stereotype.Component;
-
-@Component
 public class ClientIpFilter implements Filter {
 
     public static final String CLIENT_IP_ATTRIBUTE = "clientIp";
