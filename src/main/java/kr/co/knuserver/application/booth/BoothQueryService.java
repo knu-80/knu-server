@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import kr.co.knuserver.domain.booth.entity.Booth;
 import kr.co.knuserver.domain.booth.entity.BoothImage;
 import kr.co.knuserver.domain.booth.repository.BoothImageRepository;
+import kr.co.knuserver.domain.booth.repository.BoothLikeDailyRepository;
 import kr.co.knuserver.domain.booth.repository.BoothRepository;
 import kr.co.knuserver.global.dto.CursorPaginationResponse;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
@@ -33,6 +34,7 @@ public class BoothQueryService {
 
     private final BoothRepository boothRepository;
     private final BoothImageRepository boothImageRepository;
+    private final BoothLikeDailyRepository boothLikeDailyRepository;
     private final BoothLikeService boothLikeService;
 
     public BoothCountResponseDto getBoothCount() {
@@ -120,6 +122,10 @@ public class BoothQueryService {
                 .thenComparingLong(BoothTop3ResponseDto::boothId))
             .limit(3)
             .toList();
+    }
+
+    public List<BoothRankingResponseDto> getDailyRanking(String date) {
+        return boothLikeDailyRepository.findTopByDate(date, 3);
     }
 
     public CursorPaginationResponse<BoothListResponseDto> searchBoothsByKeyword2(String keyword, Long lastId, int size) {
