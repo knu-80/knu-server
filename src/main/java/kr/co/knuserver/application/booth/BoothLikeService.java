@@ -10,9 +10,9 @@ import kr.co.knuserver.domain.booth.entity.BoothDivision;
 import kr.co.knuserver.domain.booth.repository.BoothRepository;
 import kr.co.knuserver.global.exception.BusinessErrorCode;
 import kr.co.knuserver.global.exception.BusinessException;
+import kr.co.knuserver.global.config.LikeProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -26,20 +26,9 @@ public class BoothLikeService {
     private static final String RATE_LIMIT_KEY = "like:rate:%s:%s:%d";
     private static final String RANKING_KEY = "like:ranking";
 
-    @Value("${like.rate-limit.ttl-seconds}")
-    private long rateLimitTtlSeconds;
-
-    @Value("${like.double-event.enabled:false}")
-    private boolean doubleEventEnabled;
-
-    @Value("${like.double-event.start-time:13:00}")
-    private String doubleEventStart;
-
-    @Value("${like.double-event.end-time:15:00}")
-    private String doubleEventEnd;
-
     private final StringRedisTemplate redisTemplate;
     private final BoothRepository boothRepository;
+    private final LikeProperties likeProperties;
 
     public long like(Long boothId, String deviceId, String clientIp) {
         Booth booth = boothRepository.findById(boothId)
@@ -94,12 +83,13 @@ public class BoothLikeService {
     }
 
     private int getLikeMultiplier() {
-        if (!doubleEventEnabled) {
+        LikeProperties.DoubleEvent event = likeProperties.doubleEvent();
+        if (!event.enabled()) {
             return 1;
         }
         LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
-        LocalTime start = LocalTime.parse(doubleEventStart);
-        LocalTime end = LocalTime.parse(doubleEventEnd);
+        LocalTime start = LocalTime.parse(event.startTime());
+        LocalTime end = LocalTime.parse(event.endTime());
         boolean isEventTime = !now.isBefore(start) && now.isBefore(end);
         if (isEventTime) {
             log.debug("[DoubleEvent] 2배 이벤트 적용 중 now={}", now);
@@ -109,11 +99,9 @@ public class BoothLikeService {
 
     private void checkRateLimit(String clientIp, String deviceId, Long boothId) {
         String rateLimitKey = RATE_LIMIT_KEY.formatted(clientIp, deviceId, boothId);
-        log.debug("[RateLimit] key={}", rateLimitKey);
         boolean allowed = Boolean.TRUE.equals(
-            redisTemplate.opsForValue().setIfAbsent(rateLimitKey, "1", Duration.ofSeconds(rateLimitTtlSeconds))
+            redisTemplate.opsForValue().setIfAbsent(rateLimitKey, "1", Duration.ofSeconds(likeProperties.rateLimit().ttlSeconds()))
         );
-        log.debug("[RateLimit] allowed={}", allowed);
         if (!allowed) {
             throw new BusinessException(BusinessErrorCode.TOO_MANY_REQUESTS);
         }
