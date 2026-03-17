@@ -71,6 +71,8 @@ spring:
 device-id:
   cookie:
     max-age: ${DEVICE_ID_COOKIE_MAX_AGE:31536000} # 기본값 1년 (초 단위)
+    same-site: ${DEVICE_ID_COOKIE_SAME_SITE:Lax}
+    secure: ${DEVICE_ID_COOKIE_SECURE:true}
 
 like:
   rate-limit:
