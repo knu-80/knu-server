@@ -1,8 +1,6 @@
 package kr.co.knuserver.presentation.booth;
 
-import jakarta.validation.Valid;
 import java.util.List;
-import kr.co.knuserver.application.booth.BoothCommandService;
 import kr.co.knuserver.application.booth.BoothQueryService;
 import kr.co.knuserver.global.dto.CursorPaginationResponse;
 import kr.co.knuserver.global.exception.ApiResponse;
@@ -12,21 +10,16 @@ import kr.co.knuserver.presentation.booth.dto.BoothInfoResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothListResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothRankingResponseDto;
 import kr.co.knuserver.presentation.booth.dto.BoothTop3ResponseDto;
-import kr.co.knuserver.presentation.booth.dto.BoothUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/booths")
@@ -34,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoothApiController implements BoothApiControllerDocs {
 
     private final BoothQueryService boothQueryService;
-    private final BoothCommandService boothCommandService;
 
     // 가두모집 부스 개수 조회
     @Override
@@ -92,6 +84,21 @@ public class BoothApiController implements BoothApiControllerDocs {
     @GetMapping("/ranking/top3")
     public ResponseEntity<ApiResponse<List<BoothTop3ResponseDto>>> getTop3BoothRanking() {
         List<BoothTop3ResponseDto> result = boothQueryService.getTop3BoothRanking();
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @GetMapping("/ranking/daily")
+    public ResponseEntity<ApiResponse<List<BoothRankingResponseDto>>> getTodayDailyRanking() {
+        String today = LocalDate.now(ZoneId.of("Asia/Seoul")).toString();
+        List<BoothRankingResponseDto> result = boothQueryService.getDailyRanking(today);
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @GetMapping("/ranking/daily/{date}")
+    public ResponseEntity<ApiResponse<List<BoothRankingResponseDto>>> getDailyRanking(
+        @PathVariable(name = "date") String date
+    ) {
+        List<BoothRankingResponseDto> result = boothQueryService.getDailyRanking(date);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 }
