@@ -19,6 +19,12 @@ public class FilterConfig {
     @Value("${device-id.cookie.max-age}")
     private int cookieMaxAge;
 
+    @Value("${device-id.cookie.same-site}")
+    private String cookieSameSite;
+
+    @Value("${device-id.cookie.secure}")
+    private boolean cookieSecure;
+
     private final DeviceIdGenerator deviceIdGenerator;
     private final LikeRateLimiter likeRateLimiter;
     private final ObjectMapper objectMapper;
@@ -33,7 +39,7 @@ public class FilterConfig {
 
     @Bean
     public FilterRegistrationBean<DeviceIdCookieFilter> deviceIdCookieFilter() {
-        DeviceIdCookieFilter filter = new DeviceIdCookieFilter(cookieMaxAge, deviceIdGenerator);
+        DeviceIdCookieFilter filter = new DeviceIdCookieFilter(cookieMaxAge, cookieSameSite, cookieSecure, deviceIdGenerator);
         FilterRegistrationBean<DeviceIdCookieFilter> bean = new FilterRegistrationBean<>(filter);
         bean.addUrlPatterns("/api/v1/booths/*");
         bean.setOrder(2);

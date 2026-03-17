@@ -20,10 +20,14 @@ public class DeviceIdCookieFilter implements Filter {
     private static final String COOKIE_NAME = "deviceId";
 
     private final int cookieMaxAge;
+    private final String cookieSameSite;
+    private final boolean cookieSecure;
     private final DeviceIdGenerator deviceIdGenerator;
 
-    public DeviceIdCookieFilter(int cookieMaxAge, DeviceIdGenerator deviceIdGenerator) {
+    public DeviceIdCookieFilter(int cookieMaxAge, String cookieSameSite, boolean cookieSecure, DeviceIdGenerator deviceIdGenerator) {
         this.cookieMaxAge = cookieMaxAge;
+        this.cookieSameSite = cookieSameSite;
+        this.cookieSecure = cookieSecure;
         this.deviceIdGenerator = deviceIdGenerator;
     }
 
@@ -41,11 +45,8 @@ public class DeviceIdCookieFilter implements Filter {
         String deviceId = resolveDeviceId(httpRequest);
         if (deviceId == null) {
             deviceId = deviceIdGenerator.generate();
-            Cookie cookie = new Cookie(COOKIE_NAME, deviceId);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            cookie.setMaxAge(cookieMaxAge);
-            httpResponse.addCookie(cookie);
+            String cookieHeader = buildCookieHeader(deviceId);
+            httpResponse.addHeader("Set-Cookie", cookieHeader);
             log.debug("[DeviceId] 신규 발급 ip={} deviceId={}",
                 httpRequest.getAttribute(ClientIpFilter.CLIENT_IP_ATTRIBUTE), deviceId);
         }
@@ -54,7 +55,20 @@ public class DeviceIdCookieFilter implements Filter {
         chain.doFilter(request, response);
     }
 
+    private String buildCookieHeader(String deviceId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s=%s; Path=/; Max-Age=%d; HttpOnly; SameSite=%s",
+            COOKIE_NAME, deviceId, cookieMaxAge, cookieSameSite));
+        if (cookieSecure) {
+            sb.append("; Secure");
+        }
+        return sb.toString();
+    }
+
     private boolean isLikesPath(HttpServletRequest request) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return false;
+        }
         String uri = request.getRequestURI();
         return uri.matches(".*/booths/[^/]+/likes$");
     }
